@@ -10,13 +10,13 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class AppConfig {
 
-	@Value("${app.default.timezone}") 
-	private String timezone;
-	
-	@PostConstruct
-	public void init() {
-		// Setting Spring Boot SetTimeZone
-		TimeZone.setDefault(TimeZone.getTimeZone(timezone));
-	}
+    @Value("${app.default.timezone}")
+    private String timezone;
+
+    @PostConstruct
+    public void init() {
+        // Setting Spring Boot SetTimeZone
+        TimeZone.setDefault(TimeZone.getTimeZone(timezone));
+    }
 
 }

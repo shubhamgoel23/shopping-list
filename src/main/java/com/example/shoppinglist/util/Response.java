@@ -19,33 +19,33 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 public class Response<T> {
 
-	@Builder.Default
-	@JsonFormat(shape = JsonFormat.Shape.STRING)
-	protected long timeStamp = currentTimeMillis.getAsLong();
+    @Builder.Default
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
+    protected long timeStamp = currentTimeMillis.getAsLong();
 
-	@Builder.Default
-	protected String traceId = currentTraceId.get().orElse(null);
+    @Builder.Default
+    protected String traceId = currentTraceId.get().orElse(null);
 
-	@Builder.Default
-	protected String method = requestMethod.get().orElse(null);
+    @Builder.Default
+    protected String method = requestMethod.get().orElse(null);
 
-	@Builder.Default
-	protected String path = requestUrl.get().orElse(null);
+    @Builder.Default
+    protected String path = requestUrl.get().orElse(null);
 
-	protected HttpStatus status;
+    protected HttpStatus status;
 
-	@JsonFormat(shape = JsonFormat.Shape.STRING)
-	protected int statusCode;
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
+    protected int statusCode;
 
-	protected String reason;
+    protected String reason;
 
-	protected String message;
+    protected String message;
 
-	protected String developerMessage;
+    protected String developerMessage;
 
-	protected T data;
+    protected T data;
 
-	protected Pagination pagination;
+    protected Pagination pagination;
 
-	protected Collection<ValidationError> errors;
+    protected Collection<ValidationError> errors;
 }

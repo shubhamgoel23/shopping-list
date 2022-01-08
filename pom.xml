@@ -35,6 +35,7 @@
 			**/example/shoppinglist/exception/**,
 			**/example/shoppinglist/util/**
 		</sonar.coverage.exclusions>
+		<formatter-maven-plugin.version>2.17.1</formatter-maven-plugin.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -262,6 +263,18 @@
 						<phase>package</phase>
 						<goals>
 							<goal>report</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>net.revelc.code.formatter</groupId>
+				<artifactId>formatter-maven-plugin</artifactId>
+				<version>${formatter-maven-plugin.version}</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>format</goal>
 						</goals>
 					</execution>
 				</executions>

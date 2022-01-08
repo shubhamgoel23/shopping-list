@@ -22,16 +22,15 @@ public class HelperClass {
 
     public static final LongSupplier currentTimeMillis = System::currentTimeMillis;
 
-    public static final Supplier<Optional<HttpServletRequest>> httpServletRequest = () ->
-            Optional.ofNullable(RequestContextHolder.getRequestAttributes())
-                    .filter(ServletRequestAttributes.class::isInstance).map(ServletRequestAttributes.class::cast)
-                    .map(ServletRequestAttributes::getRequest);
+    public static final Supplier<Optional<HttpServletRequest>> httpServletRequest = () -> Optional
+            .ofNullable(RequestContextHolder.getRequestAttributes()).filter(ServletRequestAttributes.class::isInstance)
+            .map(ServletRequestAttributes.class::cast).map(ServletRequestAttributes::getRequest);
 
-    public static final Supplier<Optional<String>> requestUrl = () ->
-            httpServletRequest.get().map(HttpServletRequest::getRequestURI);
+    public static final Supplier<Optional<String>> requestUrl = () -> httpServletRequest.get()
+            .map(HttpServletRequest::getRequestURI);
 
-    public static final Supplier<Optional<String>> requestMethod = () ->
-            httpServletRequest.get().map(HttpServletRequest::getMethod);
+    public static final Supplier<Optional<String>> requestMethod = () -> httpServletRequest.get()
+            .map(HttpServletRequest::getMethod);
 
     public static final Supplier<Optional<String>> currentTraceId = () -> Optional.ofNullable(MDC.get("traceId"));
 
@@ -42,10 +41,9 @@ public class HelperClass {
 
     public static final UnaryOperator<String> trimString = source -> source != null ? source.trim() : null;
 
-    public static final Predicate<String> isStringWithoutSpecialCharacters = source ->
-            CharMatcher
-//				.anyOf("[$&+,:;=\\\\?@#|/'<>.^*()%!-]")
-                    .anyOf("'\"`;*%_=&\\\\|*?~<>^()[]{}$\\n\\r").matchesNoneOf(source);
+    public static final Predicate<String> isStringWithoutSpecialCharacters = source -> CharMatcher
+            // .anyOf("[$&+,:;=\\\\?@#|/'<>.^*()%!-]")
+            .anyOf("'\"`;*%_=&\\\\|*?~<>^()[]{}$\\n\\r").matchesNoneOf(source);
 
     public static final <T> Stream<T> collectionAsStream(Collection<T> collection) {
         return collection == null ? Stream.empty() : collection.stream();

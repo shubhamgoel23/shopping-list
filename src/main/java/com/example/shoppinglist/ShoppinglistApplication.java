@@ -6,8 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class ShoppinglistApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(ShoppinglistApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(ShoppinglistApplication.class, args);
+    }
 
 }
