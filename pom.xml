@@ -36,6 +36,7 @@
 			**/example/shoppinglist/util/**
 		</sonar.coverage.exclusions>
 		<formatter-maven-plugin.version>2.17.1</formatter-maven-plugin.version>
+		<dependency-check-maven.version>6.5.2</dependency-check-maven.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -276,6 +277,23 @@
 						<goals>
 							<!-- <goal>format</goal> -->
 							<goal>validate</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.owasp</groupId>
+				<artifactId>dependency-check-maven</artifactId>
+				<version>${dependency-check-maven.version}</version>
+				<configuration>
+					<skipProvidedScope>true</skipProvidedScope>
+					<skipRuntimeScope>true</skipRuntimeScope>
+					<failBuildOnCVSS>8</failBuildOnCVSS>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>check</goal>
 						</goals>
 					</execution>
 				</executions>
