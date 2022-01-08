@@ -1,0 +1,56 @@
+logging:
+  level:
+    root: info
+    web: info
+    sql: info
+  pattern:
+    dateformat: yyyy-MM-dd HH:mm:ss.SSS,UTC
+
+spring:
+  flyway:
+    enabled: false
+  autoconfigure:
+    exclude:
+    - org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+    - org.springframework.boot.actuate.autoconfigure.security.servlet.ManagementWebSecurityAutoConfiguration
+  jpa:
+    open-in-view: false
+  application:
+    name: shoppinglist
+  mvc:
+    throw-exception-if-no-handler-found: true
+  web:
+    resources:
+      add-mappings: false
+server:
+  shutdown: graceful
+  port: 8080
+  error:
+    whitelabel:
+      enabled: false
+  compression:
+    enabled: true
+    mime-types: application/json
+    min-response-size: 2KB
+
+management:
+  endpoint:
+    health:
+      show-details: always
+      probes:
+        enabled: true
+  metrics:
+    tags:
+      application: ${spring.application.name}
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  info:
+    java:
+      enabled: true
+      
+app:
+  default:
+    timezone: UTC
+      
