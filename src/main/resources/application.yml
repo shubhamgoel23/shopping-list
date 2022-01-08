@@ -3,8 +3,9 @@ logging:
     root: info
     web: info
     sql: info
+    feign: info
   pattern:
-    dateformat: yyyy-MM-dd HH:mm:ss.SSS,UTC
+    dateformat: yyyy-MM-dd HH:mm:ss.SSS,${app.default.timezone}
 
 spring:
   flyway:
@@ -52,5 +53,4 @@ management:
       
 app:
   default:
-    timezone: UTC
-      
+    timezone: IST

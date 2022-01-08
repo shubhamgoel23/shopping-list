@@ -15,6 +15,7 @@
 	<name>shoppinglist</name>
 	<description>Demo project for ShoppingList</description>
 	<properties>
+		<version.number>${git.branch}.${git.commit.id.abbrev}</version.number>
 		<java.version>17</java.version>
 		<spring-cloud.version>2021.0.0</spring-cloud.version>
 		<testcontainers.version>1.16.2</testcontainers.version>
@@ -163,6 +164,14 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>build-info</id>
+						<goals>
+							<goal>build-info</goal>
+						</goals>
+					</execution>
+				</executions>
 				<configuration>
 					<image>
 						<builder>paketobuildpacks/builder:tiny</builder>
