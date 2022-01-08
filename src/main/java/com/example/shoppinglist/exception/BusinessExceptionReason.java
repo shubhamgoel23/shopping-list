@@ -13,7 +13,6 @@ public enum BusinessExceptionReason implements BusinessExceptionPolicy {
 
     TODO_NOT_FOUND_BY_EXT_REF("TODO not found based on the given external reference", HttpStatus.NOT_FOUND);
 
-    /*private final String code = this.getClass().getSimpleName();*/
     private final String code = this.name();
     private final String message;
     private final HttpStatus httpStatus;
