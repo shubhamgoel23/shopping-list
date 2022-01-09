@@ -3,35 +3,35 @@ package com.example.shoppinglist.util;
 import java.util.Collection;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public class ResponseBuilder {
 
-    public static <T> ResponseEntity<Response<T>> build(T data, Pagination pagination, HttpStatus status,
-            String message) {
-        return ResponseEntity.ok(Response.<T> builder().status(status).statusCode(status.value()).message(message)
-                .data(data).pagination(pagination).build());
-    }
+	public static <T, U> Response<T, U> build(T data, U pagination, HttpStatus status, String message) {
+		
+		return Response.<T, U>builder().status(status).statusCode(status.value()).message(message).content(data)
+				.pagination(pagination).build();
+	}
 
-    public static <T> ResponseEntity<Response<T>> build(T data, HttpStatus status, String message) {
-        return ResponseEntity.ok(
-                Response.<T> builder().status(status).statusCode(status.value()).message(message).data(data).build());
-    }
+	public static <T> Response<T, Void> build(T data, HttpStatus status, String message) {
+		
+		return Response.<T, Void>builder().status(status).statusCode(status.value()).message(message).content(data)
+				.build();
+	}
 
-    public static Response<Void> build(Collection<ValidationError> errors, HttpStatus status, String message,
-            String reason) {
+	public static Response<Void, Void> build(Collection<ValidationError> errors, HttpStatus status, String message,
+			String reason) {
 
-        return Response.<Void> builder().status(status).statusCode(status.value()).reason(reason)
-                .developerMessage(message).errors(errors).build();
-    }
+		return Response.<Void, Void>builder().status(status).statusCode(status.value()).reason(reason)
+				.developerMessage(message).errors(errors).build();
+	}
 
-    public static Response<Void> build(HttpStatus status, String message, String reason) {
+	public static Response<Void, Void> build(HttpStatus status, String message, String reason) {
 
-        return Response.<Void> builder().status(status).statusCode(status.value()).reason(reason)
-                .developerMessage(message).build();
-    }
+		return Response.<Void, Void>builder().status(status).statusCode(status.value()).reason(reason)
+				.developerMessage(message).build();
+	}
 
 }

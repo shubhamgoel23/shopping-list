@@ -17,7 +17,7 @@ import lombok.experimental.SuperBuilder;
 
 @Data
 @SuperBuilder
-public class Response<T> {
+public class Response<T,U> {
 
     @Builder.Default
     @JsonFormat(shape = JsonFormat.Shape.STRING)
@@ -43,9 +43,9 @@ public class Response<T> {
 
     protected String developerMessage;
 
-    protected T data;
+    protected T content;
 
-    protected Pagination pagination;
+    protected U pagination;
 
     protected Collection<ValidationError> errors;
 }

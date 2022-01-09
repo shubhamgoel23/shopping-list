@@ -6,6 +6,7 @@ import static com.example.shoppinglist.util.HelperClass.requestUrl;
 
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
@@ -105,7 +106,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     public List<ValidationError> addValidationErrors(List<? extends ObjectError> fieldErrors) {
-        return collectionAsStream(fieldErrors).map(this::addValidationError).toList();
+        return collectionAsStream(fieldErrors).map(this::addValidationError).collect(Collectors.toList());
 
     }
 

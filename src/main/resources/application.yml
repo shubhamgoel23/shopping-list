@@ -20,6 +20,10 @@ spring:
     name: shoppinglist
   jackson:
     default-property-inclusion: non-null
+    deserialization: 
+      fail-on-unknown-properties: true
+      
+      
   mvc:
     throw-exception-if-no-handler-found: true
   web:
@@ -57,3 +61,4 @@ management:
 app:
   default:
     timezone: IST
+
