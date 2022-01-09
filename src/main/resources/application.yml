@@ -16,6 +16,9 @@ spring:
     - org.springframework.boot.actuate.autoconfigure.security.servlet.ManagementWebSecurityAutoConfiguration
   jpa:
     open-in-view: false
+        show-sql: true
+        hibernate:
+          ddl-auto: create-drop
   application:
     name: shoppinglist
   jackson:
