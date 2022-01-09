@@ -15,7 +15,7 @@ public record ItemDto(
 
         @JsonView({ RequestView.ShoppingListAddItem.class, RequestView.ShoppingListUpdateItem.class,
                 ResponseView.ShoppingListItem.class }) @Min(value = 0, groups = { RequestView.ShoppingListAddItem.class,
-                        RequestView.ShoppingListUpdateItem.class }) Integer qty
+                        RequestView.ShoppingListUpdateItem.class }) Integer quantity
     // @formatter:on
     ){
 }

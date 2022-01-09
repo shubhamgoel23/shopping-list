@@ -1,30 +1,42 @@
 package com.example.shoppinglist.resource.persistance.entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.example.shoppinglist.resource.persistance.audit.Auditable;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Builder
+@Getter
+@Setter
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
-@EqualsAndHashCode(callSuper = false)
 @Entity
 @Table(name = "shopping_list")
 public class ShoppingListEntity extends Auditable {
 
-	@Column(name = "name", nullable = false)
+	@Column(name = "name", nullable = false, unique = true)
 	private String name;
 
-	@Column(name = "type", nullable = false)
+	@Column(name = "type", nullable = false, updatable = false)
 	private String type;
+
+	@OneToMany(fetch = FetchType.LAZY)
+	@Builder.Default
+	@ToString.Exclude
+	private List<ItemEntity> items = new ArrayList<>();
 
 }

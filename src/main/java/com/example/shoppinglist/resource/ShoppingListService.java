@@ -1,68 +1,115 @@
 package com.example.shoppinglist.resource;
 
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
-import org.springframework.http.HttpStatus;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.example.shoppinglist.exception.BusinessException;
+import com.example.shoppinglist.exception.BusinessExceptionReason;
+import com.example.shoppinglist.resource.persistance.entity.ItemEntity;
 import com.example.shoppinglist.resource.persistance.entity.ShoppingListEntity;
+import com.example.shoppinglist.resource.persistance.repository.ItemEntityRepository;
 import com.example.shoppinglist.resource.persistance.repository.ShoppingListRepository;
-import com.example.shoppinglist.util.Pagination;
-import com.example.shoppinglist.util.Response;
-import com.example.shoppinglist.util.ResponseBuilder;
+import com.example.shoppinglist.util.CustomPage;
+import com.example.shoppinglist.util.CustomPagebale;
 
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class ShoppingListService {
-	
+
 	private final ShoppingListRepository shoppingListRepository;
+	private final ItemEntityRepository itemEntityRepository;
+	private final ShoppingListMapper shoppingListMapper;
 
-	public Response<Void, Void> createShoppingList(ShoppingListDto shoppingListDTO) {
-		shoppingListRepository.save(ShoppingListEntity.builder()
-				.name(shoppingListDTO.name())
-				.type(shoppingListDTO.type())
-				.build());
-		return ResponseBuilder.build(HttpStatus.OK, "Shopping List created");
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
+	public void createShoppingList(ShoppingListDto shoppingListDTO) {
+		shoppingListRepository
+				.save(ShoppingListEntity.builder().name(shoppingListDTO.name()).type(shoppingListDTO.type()).build());
 	}
 
-	public Response<Collection<ShoppingListDto>, Pagination> getShoppingList() {
-		return ResponseBuilder.build(
-				Collections.unmodifiableCollection(List.of(new ShoppingListDto(null, null, null, null))), null,
-				HttpStatus.OK, "Shopping Lists received");
+	@Transactional(readOnly = true)
+	public CustomPage<ShoppingListDto> getShoppingList(int page, int size) {
+		Page<ShoppingListEntity> shoppingListPage = shoppingListRepository.findAll(PageRequest.of(page, size));
+
+		return CustomPage.<ShoppingListDto>builder()
+				.content(shoppingListMapper.fromShoppingListEntity(shoppingListPage.getContent()))
+				.pageable(CustomPagebale.builder().pageNumber(shoppingListPage.getPageable().getPageNumber())
+						.pageSize(shoppingListPage.getPageable().getPageSize())
+						.totalElements(shoppingListPage.getTotalElements()).build())
+				.build();
 	}
 
-	public Response<ShoppingListDto, Pagination> getShoppingListById(String id) {
-		return ResponseBuilder.build(new ShoppingListDto("test", null, null, null), null, HttpStatus.OK,
-				"Shopping List received");
+	@Transactional(readOnly = true)
+	public ShoppingListDto getShoppingListById(Long id) {
+		ShoppingListEntity shoppingListEntity = shoppingListRepository.findById(id)
+				.orElseThrow(() -> new BusinessException(BusinessExceptionReason.INVALID_SHOPPING_LIST_ID));
+		return shoppingListMapper.fromShoppingListEntity(shoppingListEntity);
+
 	}
 
-	public Response<Void, Void> updateShoppingListById(String id, ShoppingListDto shoppingListDto) {
-		return ResponseBuilder.build(HttpStatus.OK, "Shopping List updated");
+	@Transactional(propagation = Propagation.REQUIRES_NEW, isolation = Isolation.REPEATABLE_READ)
+	public void updateShoppingListById(Long id, ShoppingListDto shoppingListDto) {
+		ShoppingListEntity shoppingListEntity = shoppingListRepository.findById(id)
+				.orElseThrow(() -> new BusinessException(BusinessExceptionReason.INVALID_SHOPPING_LIST_ID));
+		shoppingListEntity.setName(shoppingListDto.name());
+		shoppingListRepository.save(shoppingListEntity);
 	}
 
-	public Response<Void, Void> deleteShoppingListById(String id) {
-		return ResponseBuilder.build(HttpStatus.OK, "Shopping List deleted");
+	@Transactional(propagation = Propagation.REQUIRES_NEW, isolation = Isolation.REPEATABLE_READ)
+	public void deleteShoppingListById(Long id) {
+		if (!shoppingListRepository.existsById(id))
+			throw new BusinessException(BusinessExceptionReason.INVALID_SHOPPING_LIST_ID);
+		shoppingListRepository.deleteById(id);
 	}
 
-	public Response<Void, Void> additemInShoppingList(String id, Collection<ItemDto> shoppingListItemDtos) {
-		return ResponseBuilder.build(HttpStatus.OK, "Item added to shopping list");
+	@Transactional(propagation = Propagation.REQUIRES_NEW, isolation = Isolation.REPEATABLE_READ)
+	public void additemInShoppingList(Long id, List<ItemDto> shoppingListItemDtos) {
+		ShoppingListEntity shoppingListEntity = shoppingListRepository.findById(id)
+				.orElseThrow(() -> new BusinessException(BusinessExceptionReason.INVALID_SHOPPING_LIST_ID));
+
+		List<ItemEntity> entities = shoppingListMapper.fromItemDto(shoppingListItemDtos);
+		entities.forEach(item -> item.setShoppingList(shoppingListEntity));
+		itemEntityRepository.saveAll(entities);
+
 	}
 
-	public Response<Collection<ItemDto>, Pagination> getShoppingListItems(String id) {
-		return ResponseBuilder.build(Collections.unmodifiableCollection(List.of(new ItemDto(null, 0))),
-				null, HttpStatus.OK, "Shopping List items received");
+	@Transactional(readOnly = true)
+	public CustomPage<ItemDto> getShoppingListItems(Long id, int page, int size) {
+		if (!shoppingListRepository.existsById(id))
+			throw new BusinessException(BusinessExceptionReason.INVALID_SHOPPING_LIST_ID);
+
+		Page<ItemEntity> items = itemEntityRepository.findAllByShoppingListId(id, PageRequest.of(page, size));
+		return CustomPage.<ItemDto>builder().content(shoppingListMapper.fromItemEntity(items.getContent()))
+				.pageable(CustomPagebale.builder().pageNumber(items.getPageable().getPageNumber())
+						.pageSize(items.getPageable().getPageSize()).totalElements(items.getTotalElements()).build())
+				.build();
 	}
 
-	public Response<ItemDto, Void> getShoppingListItemByProductId(String id, String productId) {
-		return ResponseBuilder.build(new ItemDto(null, 0), null, HttpStatus.OK,
-				"Shopping List item received");
+	@Transactional(readOnly = true)
+	public ItemDto getShoppingListItemByProductId(Long id, String productId) {
+		if (!shoppingListRepository.existsById(id))
+			throw new BusinessException(BusinessExceptionReason.INVALID_SHOPPING_LIST_ID);
+
+		ItemEntity entity = itemEntityRepository.findByProductIdAndShoppingListId(productId, id)
+				.orElseThrow(() -> new BusinessException(BusinessExceptionReason.INVALID_PRODUCT_ID));
+		return shoppingListMapper.fromItemEntity(entity);
 	}
 
-	public Response<Void, Void> updateShoppingListItemsByProductId(String id, ItemDto shoppingListItemDto) {
-		return ResponseBuilder.build(HttpStatus.OK, "Item updated in shopping list");
+	@Transactional(propagation = Propagation.REQUIRES_NEW, isolation = Isolation.REPEATABLE_READ)
+	public void updateShoppingListItemsByProductId(Long id, String productId, ItemDto itemDto) {
+		if (!shoppingListRepository.existsById(id))
+			throw new BusinessException(BusinessExceptionReason.INVALID_SHOPPING_LIST_ID);
+
+		ItemEntity entity = itemEntityRepository.findByProductIdAndShoppingListId(productId, id)
+				.orElseThrow(() -> new BusinessException(BusinessExceptionReason.INVALID_PRODUCT_ID));
+		entity.setQuantity(itemDto.quantity());
+		itemEntityRepository.save(entity);
 	}
 }

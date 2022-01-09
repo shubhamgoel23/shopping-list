@@ -1,6 +1,6 @@
 package com.example.shoppinglist.resource;
 
-import java.util.Collection;
+import java.util.List;
 
 import javax.validation.constraints.NotBlank;
 
@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 
 public record ShoppingListDto(
 
-        // @formatter:off
+// @formatter:off
 
         @JsonView( {
                 ResponseView.ShoppingListBasic.class }) String id,
@@ -22,7 +22,7 @@ public record ShoppingListDto(
                         RequestView.ShoppingListCreate.class }) String type,
 
         @JsonView({ ResponseView.ShoppingListDetailed.class })
-        Collection<ItemDto> items
+        List<ItemDto> items
     // @formatter:on
-    ){
+	){
 }
