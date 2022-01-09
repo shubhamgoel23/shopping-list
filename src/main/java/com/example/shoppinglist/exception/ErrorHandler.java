@@ -10,11 +10,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class ErrorHandler implements ErrorController {
 
-    @RequestMapping("/error")
-    public void handleError(HttpServletRequest request) {
-        if (request.getAttribute(RequestDispatcher.ERROR_EXCEPTION) != null) {
-            throw (RuntimeException) request.getAttribute(RequestDispatcher.ERROR_EXCEPTION);
-        }
-    }
+	@RequestMapping("/error")
+	public void handleError(HttpServletRequest request) {
+		if (request.getAttribute(RequestDispatcher.ERROR_EXCEPTION) != null) {
+			throw (RuntimeException) request.getAttribute(RequestDispatcher.ERROR_EXCEPTION);
+		}
+	}
 
 }

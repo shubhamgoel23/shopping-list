@@ -44,6 +44,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         Object body = ResponseBuilder.build(ex.getHttpStatus(), ex.getLocalizedMessage(), ex.getCode());
         return handleExceptionInternal(ex, body, headers, ex.getHttpStatus(), request);
     }
+    
+    @ExceptionHandler({ Exception.class })
+    protected ResponseEntity<Object> handleGenericException(final Exception ex, WebRequest request) {
+        HttpHeaders headers = new HttpHeaders();
+        return handleExceptionInternal(ex, null, headers, HttpStatus.INTERNAL_SERVER_ERROR, request);
+    }
 
     @Override
     protected ResponseEntity<Object> handleExceptionInternal(Exception ex, @Nullable Object body, HttpHeaders headers,

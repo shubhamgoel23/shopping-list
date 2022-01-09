@@ -20,6 +20,11 @@ public class ResponseBuilder {
 		return Response.<T, Void>builder().status(status).statusCode(status.value()).message(message).content(data)
 				.build();
 	}
+	
+	public static Response<Void, Void> build(HttpStatus status, String message) {
+
+		return Response.<Void, Void>builder().status(status).statusCode(status.value()).message(message).build();
+	}
 
 	public static Response<Void, Void> build(Collection<ValidationError> errors, HttpStatus status, String message,
 			String reason) {
