@@ -22,7 +22,7 @@ public record ShoppingListDto(
                         RequestView.ShoppingListCreate.class }) String type,
 
         @JsonView({ ResponseView.ShoppingListDetailed.class })
-        Collection<ShoppingListItemDto> items
+        Collection<ItemDto> items
     // @formatter:on
     ){
 }

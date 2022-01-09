@@ -63,20 +63,20 @@ public class ShoppingListResource {
 	@PutMapping("/shopping-list/{id}/item")
 	public ResponseEntity<Response<Void, Void>> additemInShoppingList(@PathVariable String id,
 			@Validated(ShoppingListAddItem.class) @JsonView({
-					ShoppingListAddItem.class }) @RequestBody Collection<ShoppingListItemDto> shoppingListItemDtos) {
+					ShoppingListAddItem.class }) @RequestBody Collection<ItemDto> shoppingListItemDtos) {
 		return ResponseEntity.ok(shoppingListService.additemInShoppingList(id, shoppingListItemDtos));
 	}
 
 	@GetMapping("/shopping-list/{id}/item")
 	@JsonView({ ResponseView.ShoppingListItem.class })
-	public ResponseEntity<Response<Collection<ShoppingListItemDto>, Pagination>> getShoppingListItems(
+	public ResponseEntity<Response<Collection<ItemDto>, Pagination>> getShoppingListItems(
 			@PathVariable String id) {
 		return ResponseEntity.ok(shoppingListService.getShoppingListItems(id));
 	}
 
 	@GetMapping("/shopping-list/{id}/item/{productId}")
 	@JsonView({ ResponseView.ShoppingListItem.class })
-	public ResponseEntity<Response<ShoppingListItemDto, Void>> getShoppingListItemByProductId(@PathVariable String id,
+	public ResponseEntity<Response<ItemDto, Void>> getShoppingListItemByProductId(@PathVariable String id,
 			@PathVariable String productId) {
 		return ResponseEntity.ok(shoppingListService.getShoppingListItemByProductId(id, productId));
 	}
@@ -84,7 +84,7 @@ public class ShoppingListResource {
 	@PutMapping("/shopping-list/{id}/item/{productId}")
 	public ResponseEntity<Response<Void, Void>> updateShoppingListItemsByProductId(@PathVariable String id,
 			@PathVariable String productId, @Validated(ShoppingListUpdateItem.class) @JsonView({
-					ShoppingListUpdateItem.class }) @RequestBody ShoppingListItemDto shoppingListItemDto) {
+					ShoppingListUpdateItem.class }) @RequestBody ItemDto shoppingListItemDto) {
 		return ResponseEntity
 				.ok(shoppingListService.updateShoppingListItemsByProductId(productId, shoppingListItemDto));
 	}

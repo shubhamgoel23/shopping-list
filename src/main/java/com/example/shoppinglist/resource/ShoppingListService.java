@@ -48,21 +48,21 @@ public class ShoppingListService {
 		return ResponseBuilder.build(HttpStatus.OK, "Shopping List deleted");
 	}
 
-	public Response<Void, Void> additemInShoppingList(String id, Collection<ShoppingListItemDto> shoppingListItemDtos) {
+	public Response<Void, Void> additemInShoppingList(String id, Collection<ItemDto> shoppingListItemDtos) {
 		return ResponseBuilder.build(HttpStatus.OK, "Item added to shopping list");
 	}
 
-	public Response<Collection<ShoppingListItemDto>, Pagination> getShoppingListItems(String id) {
-		return ResponseBuilder.build(Collections.unmodifiableCollection(List.of(new ShoppingListItemDto(null, 0))),
+	public Response<Collection<ItemDto>, Pagination> getShoppingListItems(String id) {
+		return ResponseBuilder.build(Collections.unmodifiableCollection(List.of(new ItemDto(null, 0))),
 				null, HttpStatus.OK, "Shopping List items received");
 	}
 
-	public Response<ShoppingListItemDto, Void> getShoppingListItemByProductId(String id, String productId) {
-		return ResponseBuilder.build(new ShoppingListItemDto(null, 0), null, HttpStatus.OK,
+	public Response<ItemDto, Void> getShoppingListItemByProductId(String id, String productId) {
+		return ResponseBuilder.build(new ItemDto(null, 0), null, HttpStatus.OK,
 				"Shopping List item received");
 	}
 
-	public Response<Void, Void> updateShoppingListItemsByProductId(String id, ShoppingListItemDto shoppingListItemDto) {
+	public Response<Void, Void> updateShoppingListItemsByProductId(String id, ItemDto shoppingListItemDto) {
 		return ResponseBuilder.build(HttpStatus.OK, "Item updated in shopping list");
 	}
 }

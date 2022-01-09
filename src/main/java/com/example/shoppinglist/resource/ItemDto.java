@@ -5,7 +5,7 @@ import javax.validation.constraints.NotBlank;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
-public record ShoppingListItemDto(
+public record ItemDto(
 
         // @formatter:off
         @JsonView( {
