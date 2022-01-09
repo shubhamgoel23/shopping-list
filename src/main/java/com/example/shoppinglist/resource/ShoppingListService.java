@@ -7,14 +7,25 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import com.example.shoppinglist.resource.persistance.entity.ShoppingListEntity;
+import com.example.shoppinglist.resource.persistance.repository.ShoppingListRepository;
 import com.example.shoppinglist.util.Pagination;
 import com.example.shoppinglist.util.Response;
 import com.example.shoppinglist.util.ResponseBuilder;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class ShoppingListService {
+	
+	private final ShoppingListRepository shoppingListRepository;
 
 	public Response<Void, Void> createShoppingList(ShoppingListDto shoppingListDTO) {
+		shoppingListRepository.save(ShoppingListEntity.builder()
+				.name(shoppingListDTO.name())
+				.type(shoppingListDTO.type())
+				.build());
 		return ResponseBuilder.build(HttpStatus.OK, "Shopping List created");
 	}
 

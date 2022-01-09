@@ -21,7 +21,7 @@ spring:
           ddl-auto: create-drop
   application:
     name: shoppinglist
-  jackson: #these properties are overriden incase we configure @EnableWebMvc, we need to implement custom MappingJackson2HttpMessageConverter
+  jackson: #these properties are overriden incase we configure @EnableWebMvc,in that case we need to implement custom MappingJackson2HttpMessageConverter
     default-property-inclusion: non-null
     mapper:
       default-view-inclusion: true
@@ -32,6 +32,13 @@ spring:
   web:
     resources:
       add-mappings: false
+        datasource:    url: jdbc:h2:mem:testdb;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: password
+      h2:
+    console:      enabled: true
+    
       
 server:
   shutdown: graceful
