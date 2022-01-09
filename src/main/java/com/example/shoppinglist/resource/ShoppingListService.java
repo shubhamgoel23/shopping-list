@@ -25,7 +25,7 @@ public class ShoppingListService {
 	}
 
 	public Response<ShoppingListDto, Pagination> getShoppingListById(String id) {
-		return ResponseBuilder.build(new ShoppingListDto(null, null, null, null), null, HttpStatus.OK,
+		return ResponseBuilder.build(new ShoppingListDto("test", null, null, null), null, HttpStatus.OK,
 				"Shopping List received");
 	}
 

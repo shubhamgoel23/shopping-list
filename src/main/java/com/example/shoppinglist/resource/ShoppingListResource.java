@@ -43,7 +43,7 @@ public class ShoppingListResource {
 	}
 
 	@GetMapping("/shopping-list/{id}")
-	@JsonView({ ResponseView.ShoppingListDetailed.class, ResponseView.ShoppingListItem.class })
+	@JsonView({ ResponseView.ShoppingListDetailed.class })
 	public ResponseEntity<Response<ShoppingListDto, Pagination>> getShoppingListById(@PathVariable String id) {
 		return ResponseEntity.ok(shoppingListService.getShoppingListById(id));
 	}

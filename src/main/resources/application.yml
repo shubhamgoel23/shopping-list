@@ -20,10 +20,10 @@ spring:
     name: shoppinglist
   jackson:
     default-property-inclusion: non-null
+    mapper:
+      default-view-inclusion: true
     deserialization: 
       fail-on-unknown-properties: true
-      
-      
   mvc:
     throw-exception-if-no-handler-found: true
   web:
