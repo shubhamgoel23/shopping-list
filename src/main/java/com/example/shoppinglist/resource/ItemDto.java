@@ -18,4 +18,7 @@ public record ItemDto(
                         RequestView.ShoppingListUpdateItem.class }) Integer quantity
     // @formatter:on
     ){
+	public ItemDto() {
+		this(null,0);
+	}
 }

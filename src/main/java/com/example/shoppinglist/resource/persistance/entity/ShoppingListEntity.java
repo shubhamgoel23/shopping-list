@@ -11,6 +11,7 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.NaturalId;
 
 import com.example.shoppinglist.resource.persistance.audit.Auditable;
 
@@ -32,6 +33,10 @@ import lombok.ToString;
 @DynamicUpdate
 @DynamicInsert
 public class ShoppingListEntity extends Auditable {
+	
+	@NaturalId
+	@Column(name = "listId", nullable = false, unique = true, updatable = false)
+	private String listId;
 
 	@Column(name = "name", nullable = false, unique = true)
 	private String name;

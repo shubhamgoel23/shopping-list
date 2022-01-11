@@ -2,14 +2,17 @@ logging:
   level:
     root: info
     web: info
-    sql: debug
+    sql: trace
     feign: info
+    com.zaxxer.hikari: trace
+    com.zaxxer.hikari.HikariConfig: DEBUG
   pattern:
     dateformat: yyyy-MM-dd HH:mm:ss.SSS,${app.default.timezone}
 
 spring:
   flyway:
-    enabled: false
+    enabled: true
+    baseline-on-migrate: true
   autoconfigure:
     exclude:
     - org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
@@ -17,13 +20,15 @@ spring:
   jpa:
     open-in-view: false
         show-sql: false
-        hibernate:
-          ddl-auto: create-drop    properties:      hibernate.generate_statistics: true
+        hibernate:#      ddl-auto: create-drop
+      ddl-auto: none    properties:      hibernate.generate_statistics: false
       hibernate.format_sql: true
       hibernate.session.events.log.LOG_QUERIES_SLOWER_THAN_MS: 20
       hibernate.jdbc.batch_size: 500
       hibernate.order_inserts : true
       hibernate.order_updates : true
+      hibernate.jdbc.time_zone: UTC
+      hibernate.connection.provider_disables_autocommit: true
       
   application:
     name: shoppinglist
@@ -41,7 +46,8 @@ spring:
         datasource:    url: jdbc:h2:mem:testdb;DB_CLOSE_ON_EXIT=FALSE
     driver-class-name: org.h2.Driver
     username: sa
-    password: password
+    password: password    hikari:      auto-commit: false
+      
       h2:
     console:      enabled: true
     

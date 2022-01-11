@@ -71,9 +71,8 @@ public class ShoppingListResource {
 
 	@PutMapping("/shopping-list/{id}/item")
 	public ResponseEntity<Response<Void>> additemInShoppingList(@PathVariable Long id,
-			@Validated(ShoppingListAddItem.class)
-			@JsonView({ShoppingListAddItem.class })
-			@RequestBody Map<String,ItemDto> shoppingListItemMap) {
+			@Validated(ShoppingListAddItem.class) @JsonView({
+					ShoppingListAddItem.class }) @RequestBody Map<String, ItemDto> shoppingListItemMap) {
 		shoppingListService.additemInShoppingList(id, shoppingListItemMap);
 		return ResponseBuilder.build(HttpStatus.OK, "items added in shopping list");
 	}

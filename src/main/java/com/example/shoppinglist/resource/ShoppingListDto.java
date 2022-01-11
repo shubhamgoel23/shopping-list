@@ -23,4 +23,7 @@ public record ShoppingListDto(
 //        Map<String,ItemDto> shoppingListItemMap
     // @formatter:on
 	){
+	public ShoppingListDto() {
+		this(null,null,null); 
+	}
 }

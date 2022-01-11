@@ -1,12 +1,11 @@
 package com.example.shoppinglist.resource;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -35,12 +34,16 @@ public class ShoppingListService {
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public void createShoppingList(ShoppingListDto shoppingListDTO) {
 		shoppingListRepository
-				.save(ShoppingListEntity.builder().name(shoppingListDTO.name()).type(shoppingListDTO.type()).build());
+				.save(ShoppingListEntity.builder()
+						.listId(UUID.randomUUID().toString())
+						.name(shoppingListDTO.name())
+						.type(shoppingListDTO.type())
+						.build());
 	}
 
 	@Transactional(readOnly = true, propagation = Propagation.REQUIRES_NEW)
 	public CustomPage<ShoppingListDto> getShoppingList(int page, int size) {
-		Page<ShoppingListEntity> shoppingListPage = shoppingListRepository.findAll(PageRequest.of(page, size));
+		var shoppingListPage = shoppingListRepository.findAll(PageRequest.of(page, size));
 
 		return CustomPage.<ShoppingListDto>builder()
 				.content(shoppingListMapper.fromShoppingListEntity(shoppingListPage.getContent()))
@@ -52,7 +55,7 @@ public class ShoppingListService {
 
 	@Transactional(readOnly = true, propagation = Propagation.REQUIRES_NEW)
 	public ShoppingListDto getShoppingListById(Long id) {
-		ShoppingListEntity shoppingListEntity = shoppingListRepository.findById(id)
+		var shoppingListEntity = shoppingListRepository.findById(id)
 				.orElseThrow(() -> new BusinessException(BusinessExceptionReason.INVALID_SHOPPING_LIST_ID));
 		return shoppingListMapper.fromShoppingListEntity(shoppingListEntity);
 
@@ -60,7 +63,7 @@ public class ShoppingListService {
 
 	@Transactional(propagation = Propagation.REQUIRES_NEW, isolation = Isolation.REPEATABLE_READ)
 	public void updateShoppingListById(Long id, ShoppingListDto shoppingListDto) {
-		ShoppingListEntity shoppingListEntity = shoppingListRepository.findById(id)
+		var shoppingListEntity = shoppingListRepository.findById(id)
 				.orElseThrow(() -> new BusinessException(BusinessExceptionReason.INVALID_SHOPPING_LIST_ID));
 		shoppingListEntity.setName(shoppingListDto.name());
 		shoppingListRepository.save(shoppingListEntity);
@@ -75,30 +78,30 @@ public class ShoppingListService {
 
 	@Transactional(propagation = Propagation.REQUIRES_NEW, isolation = Isolation.REPEATABLE_READ)
 	public void additemInShoppingList(Long id, Map<String, ItemDto> shoppingListItemMap) {
-		ShoppingListEntity shoppingListEntity = shoppingListRepository.findById(id)
+		var shoppingListEntity = shoppingListRepository.findById(id)
 				.orElseThrow(() -> new BusinessException(BusinessExceptionReason.INVALID_SHOPPING_LIST_ID));
 
-		List<ItemEntity> items = itemEntityRepository.findAllByProductIdIn(shoppingListItemMap.keySet());
+		var items = itemEntityRepository.findAllByProductIdIn(shoppingListItemMap.keySet());
 
-		Map<String, ItemEntity> entityMap = items.stream()
-				.collect(Collectors.toMap(ItemEntity::getProductId, Function.identity()));
+		var entityMap = items.stream().collect(Collectors.toMap(ItemEntity::getProductId, Function.identity()));
 
-		List<ItemEntity> entitiesToBeDeleted = new ArrayList<>();
+		var entitiesToBeDeleted = new ArrayList<ItemEntity>();
+		var entitiesToBeAdded = new ArrayList<ItemEntity>();
 		shoppingListItemMap.forEach((k, v) -> {
 			if (v.quantity() <= 0 && entityMap.containsKey(k)) {
 				entitiesToBeDeleted.add(entityMap.get(k));
 				entityMap.remove(k);
 			} else if (v.quantity() > 0 && entityMap.containsKey(k)) {
-				ItemEntity itemEntity = entityMap.get(k);
+				var itemEntity = entityMap.get(k);
 				itemEntity.setQuantity(v.quantity());
 			} else if (v.quantity() > 0 && !entityMap.containsKey(k)) {
-				ItemEntity itemEntity = ItemEntity.builder().productId(k).quantity(v.quantity())
+				var itemEntity = ItemEntity.builder().productId(k).quantity(v.quantity())
 						.shoppingList(shoppingListEntity).build();
-				entityMap.put(k, itemEntity);
+				entitiesToBeAdded.add(itemEntity);
 			}
 		});
 
-		itemEntityRepository.saveAll(entityMap.values());
+		itemEntityRepository.saveAll(entitiesToBeAdded);
 		itemEntityRepository.deleteAll(entitiesToBeDeleted);
 
 	}
@@ -108,7 +111,7 @@ public class ShoppingListService {
 		if (!shoppingListRepository.existsById(id))
 			throw new BusinessException(BusinessExceptionReason.INVALID_SHOPPING_LIST_ID);
 
-		Page<ItemEntity> items = itemEntityRepository.findAllByShoppingListId(id, PageRequest.of(page, size));
+		var items = itemEntityRepository.findAllByShoppingListId(id, PageRequest.of(page, size));
 		return CustomPage.<ItemDto>builder().content(shoppingListMapper.fromItemEntity(items.getContent()))
 				.pageable(CustomPagebale.builder().pageNumber(items.getPageable().getPageNumber())
 						.pageSize(items.getPageable().getPageSize()).totalElements(items.getTotalElements()).build())
@@ -120,7 +123,7 @@ public class ShoppingListService {
 		if (!shoppingListRepository.existsById(id))
 			throw new BusinessException(BusinessExceptionReason.INVALID_SHOPPING_LIST_ID);
 
-		ItemEntity entity = itemEntityRepository.findByProductIdAndShoppingListId(productId, id)
+		var entity = itemEntityRepository.findByProductIdAndShoppingListId(productId, id)
 				.orElseThrow(() -> new BusinessException(BusinessExceptionReason.INVALID_PRODUCT_ID));
 		return shoppingListMapper.fromItemEntity(entity);
 	}
@@ -130,9 +133,8 @@ public class ShoppingListService {
 		if (!shoppingListRepository.existsById(id))
 			throw new BusinessException(BusinessExceptionReason.INVALID_SHOPPING_LIST_ID);
 
-		ItemEntity entity = itemEntityRepository.findByProductIdAndShoppingListId(productId, id)
+		var entity = itemEntityRepository.findByProductIdAndShoppingListId(productId, id)
 				.orElseThrow(() -> new BusinessException(BusinessExceptionReason.INVALID_PRODUCT_ID));
 		entity.setQuantity(itemDto.quantity());
-		itemEntityRepository.save(entity);
 	}
 }
