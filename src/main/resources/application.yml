@@ -82,7 +82,8 @@ management:
 
 app:
   default:
-    timezone: IST
+#    timezone: IST
+    timezone: UTC
 
 springdoc:
   swagger-ui:
