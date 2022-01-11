@@ -1,6 +1,10 @@
 package com.example.shoppinglist.resource;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -34,7 +38,7 @@ public class ShoppingListService {
 				.save(ShoppingListEntity.builder().name(shoppingListDTO.name()).type(shoppingListDTO.type()).build());
 	}
 
-	@Transactional(readOnly = true)
+	@Transactional(readOnly = true, propagation = Propagation.REQUIRES_NEW)
 	public CustomPage<ShoppingListDto> getShoppingList(int page, int size) {
 		Page<ShoppingListEntity> shoppingListPage = shoppingListRepository.findAll(PageRequest.of(page, size));
 
@@ -46,7 +50,7 @@ public class ShoppingListService {
 				.build();
 	}
 
-	@Transactional(readOnly = true)
+	@Transactional(readOnly = true, propagation = Propagation.REQUIRES_NEW)
 	public ShoppingListDto getShoppingListById(Long id) {
 		ShoppingListEntity shoppingListEntity = shoppingListRepository.findById(id)
 				.orElseThrow(() -> new BusinessException(BusinessExceptionReason.INVALID_SHOPPING_LIST_ID));
@@ -70,17 +74,36 @@ public class ShoppingListService {
 	}
 
 	@Transactional(propagation = Propagation.REQUIRES_NEW, isolation = Isolation.REPEATABLE_READ)
-	public void additemInShoppingList(Long id, List<ItemDto> shoppingListItemDtos) {
+	public void additemInShoppingList(Long id, Map<String, ItemDto> shoppingListItemMap) {
 		ShoppingListEntity shoppingListEntity = shoppingListRepository.findById(id)
 				.orElseThrow(() -> new BusinessException(BusinessExceptionReason.INVALID_SHOPPING_LIST_ID));
 
-		List<ItemEntity> entities = shoppingListMapper.fromItemDto(shoppingListItemDtos);
-		entities.forEach(item -> item.setShoppingList(shoppingListEntity));
-		itemEntityRepository.saveAll(entities);
+		List<ItemEntity> items = itemEntityRepository.findAllByProductIdIn(shoppingListItemMap.keySet());
+
+		Map<String, ItemEntity> entityMap = items.stream()
+				.collect(Collectors.toMap(ItemEntity::getProductId, Function.identity()));
+
+		List<ItemEntity> entitiesToBeDeleted = new ArrayList<>();
+		shoppingListItemMap.forEach((k, v) -> {
+			if (v.quantity() <= 0 && entityMap.containsKey(k)) {
+				entitiesToBeDeleted.add(entityMap.get(k));
+				entityMap.remove(k);
+			} else if (v.quantity() > 0 && entityMap.containsKey(k)) {
+				ItemEntity itemEntity = entityMap.get(k);
+				itemEntity.setQuantity(v.quantity());
+			} else if (v.quantity() > 0 && !entityMap.containsKey(k)) {
+				ItemEntity itemEntity = ItemEntity.builder().productId(k).quantity(v.quantity())
+						.shoppingList(shoppingListEntity).build();
+				entityMap.put(k, itemEntity);
+			}
+		});
+
+		itemEntityRepository.saveAll(entityMap.values());
+		itemEntityRepository.deleteAll(entitiesToBeDeleted);
 
 	}
 
-	@Transactional(readOnly = true)
+	@Transactional(readOnly = true, propagation = Propagation.REQUIRES_NEW)
 	public CustomPage<ItemDto> getShoppingListItems(Long id, int page, int size) {
 		if (!shoppingListRepository.existsById(id))
 			throw new BusinessException(BusinessExceptionReason.INVALID_SHOPPING_LIST_ID);
@@ -92,7 +115,7 @@ public class ShoppingListService {
 				.build();
 	}
 
-	@Transactional(readOnly = true)
+	@Transactional(readOnly = true, propagation = Propagation.REQUIRES_NEW)
 	public ItemDto getShoppingListItemByProductId(Long id, String productId) {
 		if (!shoppingListRepository.existsById(id))
 			throw new BusinessException(BusinessExceptionReason.INVALID_SHOPPING_LIST_ID);

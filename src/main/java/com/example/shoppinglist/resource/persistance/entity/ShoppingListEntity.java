@@ -9,6 +9,9 @@ import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+
 import com.example.shoppinglist.resource.persistance.audit.Auditable;
 
 import lombok.AllArgsConstructor;
@@ -26,6 +29,8 @@ import lombok.ToString;
 @AllArgsConstructor
 @Entity
 @Table(name = "shopping_list")
+@DynamicUpdate
+@DynamicInsert
 public class ShoppingListEntity extends Auditable {
 
 	@Column(name = "name", nullable = false, unique = true)
@@ -34,7 +39,7 @@ public class ShoppingListEntity extends Auditable {
 	@Column(name = "type", nullable = false, updatable = false)
 	private String type;
 
-	@OneToMany(fetch = FetchType.LAZY)
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "shoppingList")
 	@Builder.Default
 	@ToString.Exclude
 	private List<ItemEntity> items = new ArrayList<>();

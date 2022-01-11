@@ -1,6 +1,6 @@
 package com.example.shoppinglist.resource;
 
-import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -71,9 +71,10 @@ public class ShoppingListResource {
 
 	@PutMapping("/shopping-list/{id}/item")
 	public ResponseEntity<Response<Void>> additemInShoppingList(@PathVariable Long id,
-			@Validated(ShoppingListAddItem.class) @JsonView({
-					ShoppingListAddItem.class }) @RequestBody List<ItemDto> shoppingListItemDtos) {
-		shoppingListService.additemInShoppingList(id, shoppingListItemDtos);
+			@Validated(ShoppingListAddItem.class)
+			@JsonView({ShoppingListAddItem.class })
+			@RequestBody Map<String,ItemDto> shoppingListItemMap) {
+		shoppingListService.additemInShoppingList(id, shoppingListItemMap);
 		return ResponseBuilder.build(HttpStatus.OK, "items added in shopping list");
 	}
 

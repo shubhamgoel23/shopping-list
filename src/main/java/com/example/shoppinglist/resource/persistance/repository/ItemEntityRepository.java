@@ -1,5 +1,6 @@
 package com.example.shoppinglist.resource.persistance.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -15,5 +16,7 @@ public interface ItemEntityRepository extends JpaRepository<ItemEntity, Long> {
 	Page<ItemEntity> findAllByShoppingListId(Long id, Pageable pageable);
 
 	Optional<ItemEntity> findByProductIdAndShoppingListId(String productId, Long id);
+
+	List<ItemEntity> findAllByProductIdIn(Iterable<String> productIds);
 
 }

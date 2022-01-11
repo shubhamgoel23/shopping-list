@@ -6,6 +6,9 @@ import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+
 import com.example.shoppinglist.resource.persistance.audit.Auditable;
 
 import lombok.AllArgsConstructor;
@@ -23,6 +26,8 @@ import lombok.ToString;
 @AllArgsConstructor
 @Entity
 @Table(name = "item")
+@DynamicUpdate
+@DynamicInsert
 public class ItemEntity extends Auditable {
 
 	@Column(name = "productId", nullable = false)
