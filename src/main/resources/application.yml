@@ -16,17 +16,17 @@ spring:
     - org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
     - org.springframework.boot.actuate.autoconfigure.security.servlet.ManagementWebSecurityAutoConfiguration
   jpa:
-    open-in-view: false
-        show-sql: false
-        properties:      hibernate.generate_statistics: false
-      
-      hibernate.format_sql: true
-      hibernate.session.events.log.LOG_QUERIES_SLOWER_THAN_MS: 20
-      hibernate.jdbc.batch_size: 500
-      hibernate.order_inserts : true
-      hibernate.order_updates : true
-      hibernate.jdbc.time_zone: UTC
-      hibernate.connection.provider_disables_autocommit: true
+    open-in-view: false    show-sql: false    properties:      hibernate:
+        generate_statistics: false
+        format_sql: true
+        session.events.log.LOG_QUERIES_SLOWER_THAN_MS: 20
+        jdbc:
+          batch_size: 500
+          time_zone: ${app.default.timezone}
+        order:
+          inserts : true
+          updates : true
+        connection.provider_disables_autocommit: true
       
   application:
     name: shoppinglist
