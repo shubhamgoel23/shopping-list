@@ -13,11 +13,6 @@ import javax.persistence.*;
 @EntityListeners(value = {AuditingEntityListener.class, LifecycleListener.class})
 public abstract class Auditable {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "id", nullable = false, updatable = false)
-    private Long id;
-
     @Version
     private Long version;
 

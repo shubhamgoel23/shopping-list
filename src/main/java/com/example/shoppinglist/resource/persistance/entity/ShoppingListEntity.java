@@ -22,6 +22,17 @@ import java.util.List;
 @DynamicInsert
 public class ShoppingListEntity extends Auditable {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "list_sequence")
+    @SequenceGenerator(
+            name = "list_sequence",
+            sequenceName = "list_sequence",
+            allocationSize = 100
+    )
+    @Setter(AccessLevel.NONE)
+    @Column(name = "id", nullable = false, updatable = false)
+    private Long id;
+
     @NaturalId
     @Column(name = "listId", nullable = false, unique = true, updatable = false)
     private String listId;

@@ -19,6 +19,17 @@ import javax.persistence.*;
 @DynamicInsert
 public class ItemEntity extends Auditable {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "item_sequence")
+    @SequenceGenerator(
+            name = "item_sequence",
+            sequenceName = "item_sequence",
+            allocationSize = 100
+    )
+    @Setter(AccessLevel.NONE)
+    @Column(name = "id", nullable = false, updatable = false)
+    private Long id;
+
     @Column(name = "productId", nullable = false)
     private String productId;
 
