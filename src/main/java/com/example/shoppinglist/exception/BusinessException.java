@@ -3,6 +3,8 @@ package com.example.shoppinglist.exception;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
+import java.io.Serial;
+
 import static java.lang.String.format;
 
 @Getter
@@ -11,6 +13,7 @@ public class BusinessException extends RuntimeException implements BusinessExcep
     /**
      *
      */
+    @Serial
     private static final long serialVersionUID = 1L;
 
     protected final String code;
@@ -20,8 +23,7 @@ public class BusinessException extends RuntimeException implements BusinessExcep
     /**
      * Constructor accepting an exception reason.
      *
-     * @param reason
-     *            the reason of the exception
+     * @param reason the reason of the exception
      */
     public BusinessException(final BusinessExceptionReason reason) {
         super(reason.getMessage());
@@ -33,10 +35,8 @@ public class BusinessException extends RuntimeException implements BusinessExcep
     /**
      * Constructor accepting an exception reason and an http status that will override the default one from the reason.
      *
-     * @param reason
-     *            the reason of the exception
-     * @param overridingHttpStatus
-     *            the http status which overrides the one from the reason
+     * @param reason               the reason of the exception
+     * @param overridingHttpStatus the http status which overrides the one from the reason
      */
     public BusinessException(final BusinessExceptionReason reason, final HttpStatus overridingHttpStatus) {
         this.code = reason.getCode();
@@ -47,10 +47,8 @@ public class BusinessException extends RuntimeException implements BusinessExcep
     /**
      * Constructor accepting an excepting reason and optional parameters which are replaced in the message.
      *
-     * @param reason
-     *            the reason of the exception
-     * @param parameters
-     *            the optional parameters
+     * @param reason     the reason of the exception
+     * @param parameters the optional parameters
      */
     public BusinessException(final BusinessExceptionReason reason, final Object... parameters) {
         if (parameters != null) {

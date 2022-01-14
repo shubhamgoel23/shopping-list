@@ -1,22 +1,22 @@
 package com.example.shoppinglist;
 
-import static org.junit.Assert.assertEquals;
-
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
+import static org.junit.Assert.assertEquals;
+
 @SpringBootTest
 @Testcontainers
 @AutoConfigureMockMvc
-@ActiveProfiles("test")
+@ActiveProfiles({"test", "liquidbase"})
 class ContainerTest {
 
-	@Test
-	void shouldFindAll() {
-		assertEquals(1l, 1l);
-	}
+    @Test
+    void shouldFindAll() {
+        assertEquals(1l, 1l);
+    }
 
 }

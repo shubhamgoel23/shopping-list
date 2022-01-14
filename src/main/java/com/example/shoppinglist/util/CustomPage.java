@@ -1,11 +1,11 @@
 package com.example.shoppinglist.util;
 
-import java.util.Collection;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.Collection;
 
 @Data
 @NoArgsConstructor
@@ -13,6 +13,6 @@ import lombok.NoArgsConstructor;
 @Builder
 public class CustomPage<T> {
 
-	private Collection<T> content;
-	private CustomPagebale pageable;
+    private Collection<T> content;
+    private CustomPagebale pageable;
 }

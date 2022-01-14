@@ -10,8 +10,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CustomPagebale {
-	private int pageNumber;
-	private int pageSize;
-	private long totalElements;
+    private int pageNumber;
+    private int pageSize;
+    private long totalElements;
 
 }

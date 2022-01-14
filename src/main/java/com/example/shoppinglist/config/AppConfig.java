@@ -1,11 +1,10 @@
 package com.example.shoppinglist.config;
 
-import java.util.TimeZone;
-
-import javax.annotation.PostConstruct;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
+
+import javax.annotation.PostConstruct;
+import java.util.TimeZone;
 
 @Configuration
 public class AppConfig {

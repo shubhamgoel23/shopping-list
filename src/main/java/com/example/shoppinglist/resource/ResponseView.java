@@ -2,12 +2,12 @@ package com.example.shoppinglist.resource;
 
 public interface ResponseView {
 
-	public static interface ShoppingListBasic {
-	}
+    interface ShoppingListBasic {
+    }
 
-	public static interface ShoppingListItem {
-	}
+    interface ShoppingListItem {
+    }
 
-	public static interface ShoppingListDetailed extends ShoppingListBasic, ShoppingListItem {
-	}
+    interface ShoppingListDetailed extends ShoppingListBasic, ShoppingListItem {
+    }
 }
