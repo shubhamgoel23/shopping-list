@@ -13,7 +13,6 @@ spring:
   profiles:
     active:
       - h2
-      - flyway
   autoconfigure:
     exclude:
       - org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
@@ -21,12 +20,16 @@ spring:
   datasource:
     hikari:
       auto-commit: false
+  flyway:
+    enabled: false
+  liquibase:
+    enabled: false
   jpa:
     open-in-view: false
     show-sql: false
     properties:
       hibernate:
-        generate_statistics: false
+        generate_statistics: true
         format_sql: true
         session.events.log.LOG_QUERIES_SLOWER_THAN_MS: 20
         jdbc:
@@ -98,12 +101,14 @@ spring:
     activate:
       on-profile:
         - h2
-
   datasource:
     url: jdbc:h2:mem:testdb;DB_CLOSE_ON_EXIT=FALSE
     driver-class-name: org.h2.Driver
     username: sa
     password: password
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
   h2:
     console:
       enabled: true
