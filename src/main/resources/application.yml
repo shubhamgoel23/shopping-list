@@ -18,12 +18,12 @@ spring:
     exclude:
       - org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
       - org.springframework.boot.actuate.autoconfigure.security.servlet.ManagementWebSecurityAutoConfiguration
+  datasource:
+    hikari:
+      auto-commit: false
   jpa:
     open-in-view: false
     show-sql: false
-    datasource:
-      hikari:
-        auto-commit: false
     properties:
       hibernate:
         generate_statistics: false
