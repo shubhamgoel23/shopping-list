@@ -25,7 +25,7 @@ public abstract class Auditable {
     @CreatedDate
     private Long createdOn;
 
-    @Column(name = "updatedOn")
+    @Column(name = "updatedOn", nullable = false)
     @LastModifiedDate
     private Long updatedOn;
 
