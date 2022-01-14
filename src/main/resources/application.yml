@@ -33,7 +33,7 @@ spring:
         format_sql: true
         session.events.log.LOG_QUERIES_SLOWER_THAN_MS: 20
         jdbc:
-          batch_size: 500
+          batch_size: ${app.datasource.batch_size}
           time_zone: ${app.default.timezone}
         order:
           inserts: true
@@ -85,6 +85,8 @@ app:
   default:
     #    timezone: IST
     timezone: UTC
+  datasource:
+    batch_size: 500
 
 springdoc:
   swagger-ui:
