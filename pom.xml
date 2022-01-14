@@ -15,6 +15,7 @@
 	<name>shoppinglist</name>
 	<description>Demo project for ShoppingList</description>
 	<properties>
+		<!--suppress UnresolvedMavenProperty -->
 		<version.number>${git.branch}.${git.commit.id.abbrev}</version.number>
 		<java.version>17</java.version>
 		<spring-cloud.version>2021.0.0</spring-cloud.version>
@@ -40,8 +41,13 @@
 		<!--vulnerable dependency  -->
 		<h2.version>2.0.206</h2.version>
 		<flyway.version>8.4.1</flyway.version>
+		<liquibase.version>4.5.0</liquibase.version>
 	</properties>
 	<dependencies>
+		<dependency>
+			<groupId>org.liquibase</groupId>
+			<artifactId>liquibase-core</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>

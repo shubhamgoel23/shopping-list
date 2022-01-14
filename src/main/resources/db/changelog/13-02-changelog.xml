@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.5.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+    <changeSet id="1642045948353-1" author="shubham (generated)">
+        <createSequence incrementBy="1" sequenceName="hibernate_sequence" startValue="1"/>
+    </changeSet>
+    <changeSet id="1642045948353-2" author="shubham (generated)">
+        <createTable tableName="item">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_item"/>
+            </column>
+            <column name="version" type="BIGINT"/>
+            <column name="created_on" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_on" type="BIGINT"/>
+            <column name="product_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="quantity" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="shopping_list_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1642045948353-3" author="shubham (generated)">
+        <createTable tableName="shopping_list">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_shopping_list"/>
+            </column>
+            <column name="version" type="BIGINT"/>
+            <column name="created_on" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_on" type="BIGINT"/>
+            <column name="list_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="type" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1642045948353-4" author="shubham (generated)">
+        <addUniqueConstraint columnNames="list_id" constraintName="uc_shopping_list_listid" tableName="shopping_list"/>
+    </changeSet>
+    <changeSet id="1642045948353-5" author="shubham (generated)">
+        <addUniqueConstraint columnNames="name" constraintName="uc_shopping_list_name" tableName="shopping_list"/>
+    </changeSet>
+    <changeSet id="1642045948353-6" author="shubham (generated)">
+        <addForeignKeyConstraint baseColumnNames="shopping_list_id" baseTableName="item"
+                                 constraintName="FK_ITEM_ON_SHOPPINGLIST" referencedColumnNames="id"
+                                 referencedTableName="shopping_list"/>
+    </changeSet>
+
+</databaseChangeLog>

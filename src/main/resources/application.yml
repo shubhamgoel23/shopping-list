@@ -2,7 +2,7 @@ logging:
   level:
     root: info
     web: info
-    sql: trace
+    sql: debug
     feign: info
     com.zaxxer.hikari: trace
     com.zaxxer.hikari.HikariConfig: DEBUG
@@ -10,13 +10,22 @@ logging:
     dateformat: yyyy-MM-dd HH:mm:ss.SSS,${app.default.timezone}
 
 spring:
-  profiles:    active:    - dev
+  profiles:
+    active:
+    - h2
+    - flyway
   autoconfigure:
     exclude:
     - org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
     - org.springframework.boot.actuate.autoconfigure.security.servlet.ManagementWebSecurityAutoConfiguration
   jpa:
-    open-in-view: false    show-sql: false    properties:      hibernate:
+    open-in-view: false
+    show-sql: false
+    datasource:
+      hikari:
+        auto-commit: false
+    properties:
+      hibernate:
         generate_statistics: false
         format_sql: true
         session.events.log.LOG_QUERIES_SLOWER_THAN_MS: 20
@@ -27,7 +36,6 @@ spring:
           inserts : true
           updates : true
         connection.provider_disables_autocommit: true
-      
   application:
     name: shoppinglist
   jackson: #these properties are overriden incase we configure @EnableWebMvc,in that case we need to implement custom MappingJackson2HttpMessageConverter
@@ -41,11 +49,6 @@ spring:
   web:
     resources:
       add-mappings: false
-        datasource:    hikari:      auto-commit: false
-        h2:
-    console:      enabled: true
-    
-      
 server:
   shutdown: graceful
   port: 8080
@@ -88,28 +91,57 @@ springdoc:
     disable-swagger-default-url: true
   cache:
     disabled: true
-    
+
 ---
 spring:
   config:
     activate:
       on-profile:
-      - dev
+        - h2
+
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: password
+  h2:
+    console:
+      enabled: true
+      settings:
+        web-allow-others: true
+---
+spring:
+  config:
+    activate:
+      on-profile:
+      - flyway
   flyway:
     enabled: true
     baseline-on-migrate: true
-  jpa:    hibernate:
-      ddl-auto: none  datasource:   url: jdbc:h2:mem:testdb;DB_CLOSE_ON_EXIT=FALSE
-   driver-class-name: org.h2.Driver
-   username: sa
-   password: password
-  h2:    console:      settings:        web-allow-others: true
----
-spring:  config:    activate:      on-profile:      - test
-  flyway:
+  liquibase:
     enabled: false
-    baseline-on-migrate: true
-    
   jpa:
     hibernate:
-      ddl-auto: create-drop  datasource:    url: jdbc:tc:mysql:latest:///testdb
+      ddl-auto: none
+---
+spring:
+  config:
+    activate:
+      on-profile:
+      - test
+  datasource:
+    url: jdbc:tc:mysql:latest:///testdb
+---
+spring:
+  config:
+    activate:
+      on-profile:
+        - liquidbase
+  flyway:
+    enabled: false
+  liquibase:
+    enabled: true
+    change-log: classpath:/db/changelog/13-02-changelog.xml
+  jpa:
+    hibernate:
+      ddl-auto: none
