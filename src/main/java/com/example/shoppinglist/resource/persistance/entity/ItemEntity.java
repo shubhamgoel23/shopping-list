@@ -1,6 +1,7 @@
 package com.example.shoppinglist.resource.persistance.entity;
 
 import com.example.shoppinglist.resource.persistance.audit.Auditable;
+import com.example.shoppinglist.util.AppConstant;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -24,7 +25,7 @@ public class ItemEntity extends Auditable {
     @SequenceGenerator(
             name = "item_sequence",
             sequenceName = "item_sequence",
-            allocationSize = 100
+            allocationSize = AppConstant.SEQUENCE_BATCH_SIZE
     )
     @Setter(AccessLevel.NONE)
     @Column(name = "id", nullable = false, updatable = false)
