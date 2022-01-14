@@ -41,7 +41,7 @@ spring:
         connection.provider_disables_autocommit: true
   application:
     name: shoppinglist
-  jackson: #these properties are overriden incase we configure @EnableWebMvc,in that case we need to implement custom MappingJackson2HttpMessageConverter
+  jackson: #these properties are overridden in case we configure @EnableWebMvc,in that case we need to implement custom MappingJackson2HttpMessageConverter
     default-property-inclusion: non-null
     mapper:
       default-view-inclusion: true
