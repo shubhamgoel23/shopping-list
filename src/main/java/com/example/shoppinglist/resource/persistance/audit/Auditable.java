@@ -6,17 +6,15 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.EntityListeners;
+import javax.persistence.MappedSuperclass;
+import javax.persistence.Version;
 
 @Getter
 @MappedSuperclass
 @EntityListeners(value = {AuditingEntityListener.class, LifecycleListener.class})
 public abstract class Auditable {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "id", nullable = false, updatable = false)
-    private Long id;
 
     @Version
     private Long version;
@@ -25,7 +23,7 @@ public abstract class Auditable {
     @CreatedDate
     private Long createdOn;
 
-    @Column(name = "updatedOn")
+    @Column(name = "updatedOn", nullable = false)
     @LastModifiedDate
     private Long updatedOn;
 

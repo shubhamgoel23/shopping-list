@@ -5,10 +5,13 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.5.xsd"
         objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
-    <changeSet id="1642045948353-1" author="shubham (generated)">
-        <createSequence incrementBy="1" sequenceName="hibernate_sequence" startValue="1"/>
+    <changeSet id="1642234919562-1" author="shubham (generated)">
+        <createSequence incrementBy="${sequenceBatch}" sequenceName="item_sequence" startValue="1"/>
     </changeSet>
-    <changeSet id="1642045948353-2" author="shubham (generated)">
+    <changeSet id="1642234919562-2" author="shubham (generated)">
+        <createSequence incrementBy="${sequenceBatch}" sequenceName="list_sequence" startValue="1"/>
+    </changeSet>
+    <changeSet id="1642234919562-3" author="shubham (generated)">
         <createTable tableName="item">
             <column name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_item"/>
@@ -17,7 +20,9 @@
             <column name="created_on" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
-            <column name="updated_on" type="BIGINT"/>
+            <column name="updated_on" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
             <column name="product_id" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
@@ -27,7 +32,7 @@
             <column name="shopping_list_id" type="BIGINT"/>
         </createTable>
     </changeSet>
-    <changeSet id="1642045948353-3" author="shubham (generated)">
+    <changeSet id="1642234919562-4" author="shubham (generated)">
         <createTable tableName="shopping_list">
             <column name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_shopping_list"/>
@@ -36,7 +41,9 @@
             <column name="created_on" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
-            <column name="updated_on" type="BIGINT"/>
+            <column name="updated_on" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
             <column name="list_id" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
@@ -48,16 +55,29 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet id="1642045948353-4" author="shubham (generated)">
+    <changeSet id="1642234919562-5" author="shubham (generated)">
         <addUniqueConstraint columnNames="list_id" constraintName="uc_shopping_list_listid" tableName="shopping_list"/>
     </changeSet>
-    <changeSet id="1642045948353-5" author="shubham (generated)">
-        <addUniqueConstraint columnNames="name" constraintName="uc_shopping_list_name" tableName="shopping_list"/>
+    <changeSet id="1642234919562-7" author="shubham (generated)">
+        <createIndex indexName="index" tableName="shopping_list">
+            <column name="name"/>
+            <column name="type"/>
+        </createIndex>
     </changeSet>
-    <changeSet id="1642045948353-6" author="shubham (generated)">
+    <changeSet id="1642234919562-8" author="shubham (generated)">
+        <createIndex indexName="uk_shoppingListId_N_productId_index" tableName="item">
+            <column name="shopping_list_id"/>
+            <column name="product_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet id="1642234919562-9" author="shubham (generated)">
         <addForeignKeyConstraint baseColumnNames="shopping_list_id" baseTableName="item"
-                                 constraintName="FK_ITEM_ON_SHOPPINGLIST" referencedColumnNames="id"
+                                 constraintName="FK_ITEM_ON_SHOPPINGLISTID" referencedColumnNames="id"
                                  referencedTableName="shopping_list"/>
+
+        <createIndex indexName="fk_shopping_list_id_index" tableName="item">
+            <column name="shopping_list_id"/>
+        </createIndex>
     </changeSet>
 
 </databaseChangeLog>

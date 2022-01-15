@@ -21,24 +21,34 @@ spring:
   datasource:
     hikari:
       auto-commit: false
+  flyway:
+    enabled: false
+  liquibase:
+    enabled: false
   jpa:
     open-in-view: false
     show-sql: false
+    hibernate:
+      ddl-auto: none
     properties:
       hibernate:
-        generate_statistics: false
+        generate_statistics: true
         format_sql: true
         session.events.log.LOG_QUERIES_SLOWER_THAN_MS: 20
         jdbc:
-          batch_size: 500
+          batch_size: ${app.datasource.batch_size}
           time_zone: ${app.default.timezone}
         order:
           inserts: true
           updates: true
         connection.provider_disables_autocommit: true
+        id.optimizer.pooled.preferred: pooled-lo
+  h2:
+    console:
+      enabled: false
   application:
     name: shoppinglist
-  jackson: #these properties are overriden incase we configure @EnableWebMvc,in that case we need to implement custom MappingJackson2HttpMessageConverter
+  jackson: #these properties are overridden in case we configure @EnableWebMvc,in that case we need to implement custom MappingJackson2HttpMessageConverter
     default-property-inclusion: non-null
     mapper:
       default-view-inclusion: true
@@ -81,6 +91,8 @@ app:
   default:
     #    timezone: IST
     timezone: UTC
+  datasource:
+    batch_size: 500
 
 springdoc:
   swagger-ui:
@@ -98,10 +110,9 @@ spring:
     activate:
       on-profile:
         - h2
-
   datasource:
     url: jdbc:h2:mem:testdb;DB_CLOSE_ON_EXIT=FALSE
-    driver-class-name: org.h2.Driver
+    #    driver-class-name: org.h2.Driver
     username: sa
     password: password
   h2:
@@ -120,9 +131,6 @@ spring:
     baseline-on-migrate: true
   liquibase:
     enabled: false
-  jpa:
-    hibernate:
-      ddl-auto: none
 ---
 spring:
   config:
@@ -136,12 +144,22 @@ spring:
   config:
     activate:
       on-profile:
-        - liquidbase
+        - liquibase
   flyway:
     enabled: false
   liquibase:
     enabled: true
-    change-log: classpath:/db/changelog/13-02-changelog.xml
-  jpa:
-    hibernate:
-      ddl-auto: none
+    change-log: classpath:/db/changelog/2022/01/15-01-changelog.xml
+    parameters:
+      sequenceBatch: ${app.datasource.batch_size}
+---
+spring:
+  config:
+    activate:
+      on-profile:
+        - postgres
+  datasource:
+    url: jdbc:postgresql://localhost:5432/amigoscode
+    username: amigoscode
+    password: password
+---

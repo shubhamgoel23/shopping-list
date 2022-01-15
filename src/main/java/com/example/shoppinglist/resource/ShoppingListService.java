@@ -79,7 +79,7 @@ public class ShoppingListService {
         var shoppingListEntity = shoppingListRepository.findById(id)
                 .orElseThrow(() -> new BusinessException(BusinessExceptionReason.INVALID_SHOPPING_LIST_ID));
 
-        var items = itemEntityRepository.findAllByProductIdIn(shoppingListItemMap.keySet());
+        var items = itemEntityRepository.findAllByProductIdInAndShoppingListId(shoppingListItemMap.keySet(), shoppingListEntity.getId());
 
         var entityMap = items.stream().collect(Collectors.toMap(ItemEntity::getProductId, Function.identity()));
 

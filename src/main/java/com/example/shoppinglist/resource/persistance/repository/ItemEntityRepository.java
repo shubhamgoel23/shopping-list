@@ -16,6 +16,6 @@ public interface ItemEntityRepository extends JpaRepository<ItemEntity, Long> {
 
     Optional<ItemEntity> findByProductIdAndShoppingListId(String productId, Long id);
 
-    List<ItemEntity> findAllByProductIdIn(Iterable<String> productIds);
+    List<ItemEntity> findAllByProductIdInAndShoppingListId(Iterable<String> productIds, Long id);
 
 }
