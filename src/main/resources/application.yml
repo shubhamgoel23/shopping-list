@@ -13,8 +13,7 @@ spring:
   profiles:
     active:
       - h2
-      - liquibase
-  #      - jpa-create-drop
+      - flyway
   autoconfigure:
     exclude:
       - org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
@@ -44,6 +43,9 @@ spring:
           updates: true
         connection.provider_disables_autocommit: true
         id.optimizer.pooled.preferred: pooled-lo
+  h2:
+    console:
+      enabled: false
   application:
     name: shoppinglist
   jackson: #these properties are overridden in case we configure @EnableWebMvc,in that case we need to implement custom MappingJackson2HttpMessageConverter
@@ -147,7 +149,7 @@ spring:
     enabled: false
   liquibase:
     enabled: true
-    change-log: classpath:/db/changelog/2022/01/14-01-changelog.xml
+    change-log: classpath:/db/changelog/2022/01/15-01-changelog.xml
     parameters:
       sequenceBatch: ${app.datasource.batch_size}
 ---
@@ -160,13 +162,4 @@ spring:
     url: jdbc:postgresql://localhost:5432/amigoscode
     username: amigoscode
     password: password
----
-spring:
-  config:
-    activate:
-      on-profile:
-        - jpa-create-drop
-  jpa:
-    hibernate:
-      ddl-auto: create-drop
 ---

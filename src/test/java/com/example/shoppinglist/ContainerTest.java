@@ -11,7 +11,7 @@ import static org.junit.Assert.assertEquals;
 @SpringBootTest
 @Testcontainers
 @AutoConfigureMockMvc
-@ActiveProfiles({"test", "liquidbase"})
+@ActiveProfiles({"test", "liquibase"})
 class ContainerTest {
 
     @Test

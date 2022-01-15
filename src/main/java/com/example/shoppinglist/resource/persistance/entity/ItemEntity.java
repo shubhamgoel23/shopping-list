@@ -15,7 +15,10 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "item")
+@Table(name = "item", indexes = {
+        @Index(name = "fk_shopping_list_id_index", columnList = "shoppingListId"),
+        @Index(name = "uk_shoppingListId_N_productId_index", columnList = "shoppingListId,productId")
+})
 @DynamicUpdate
 @DynamicInsert
 public class ItemEntity extends Auditable {
@@ -39,5 +42,9 @@ public class ItemEntity extends Auditable {
 
     @ToString.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "shoppingListId")
     private ShoppingListEntity shoppingList;
+
+    @Column(name = "shoppingListId", insertable = false, updatable = false)
+    private Long shoppingListId;
 }

@@ -18,7 +18,9 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "shopping_list")
+@Table(name = "shopping_list", indexes = {
+        @Index(name = "index", columnList = "name,type")
+})
 @DynamicUpdate
 @DynamicInsert
 public class ShoppingListEntity extends Auditable {
@@ -38,7 +40,7 @@ public class ShoppingListEntity extends Auditable {
     @Column(name = "listId", nullable = false, unique = true, updatable = false)
     private String listId;
 
-    @Column(name = "name", nullable = false, unique = true)
+    @Column(name = "name", nullable = false)
     private String name;
 
     @Column(name = "type", nullable = false, updatable = false)
