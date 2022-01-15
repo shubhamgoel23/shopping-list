@@ -26,7 +26,7 @@ CREATE TABLE shopping_list (
 
 ALTER TABLE shopping_list ADD CONSTRAINT uc_shopping_list_listid UNIQUE (list_id);
 
-CREATE INDEX index ON shopping_list(name, type);
+CREATE INDEX in_name_n_type ON shopping_list(name, type);
 
 CREATE INDEX uk_shoppingListId_N_productId_index ON item(shopping_list_id, product_id);
 

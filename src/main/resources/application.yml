@@ -138,7 +138,13 @@ spring:
       on-profile:
         - test
   datasource:
-    url: jdbc:tc:mysql:latest:///testdb
+#    url: jdbc:tc:mysql:latest:///testdb
+#    url: jdbc:tc:sqlserver:latest:///testdb
+#    url: jdbc:tc:postgresql:latest:///testdb
+#    url: jdbc:tc:oracle:latest:///testdb
+#    url: jdbc:tc:mariadb:latest:///testdb
+#    url: jdbc:tc:cockroach:latest:///testdb
+#    url: jdbc:tc:db2:latest:///testdb
 ---
 spring:
   config:
