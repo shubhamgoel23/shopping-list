@@ -12,15 +12,22 @@ logging:
 spring:
   profiles:
     active:
-      - h2
-      - flyway
+      - liquibase
   autoconfigure:
     exclude:
       - org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
       - org.springframework.boot.actuate.autoconfigure.security.servlet.ManagementWebSecurityAutoConfiguration
   datasource:
+    url: ${DB_URL:jdbc:h2:mem:testdb;DB_CLOSE_ON_EXIT=FALSE}
+    username: ${DB_USERNAME:sa}
+    password: ${DB_PASSWORD:password}
     hikari:
       auto-commit: false
+  h2:
+    console:
+      enabled: @h2.enable@
+      settings:
+        web-allow-others: @h2.enable@
   flyway:
     enabled: false
   liquibase:
@@ -43,9 +50,6 @@ spring:
           updates: true
         connection.provider_disables_autocommit: true
         id.optimizer.pooled.preferred: pooled-lo
-  h2:
-    console:
-      enabled: false
   application:
     name: shoppinglist
   jackson: #these properties are overridden in case we configure @EnableWebMvc,in that case we need to implement custom MappingJackson2HttpMessageConverter
@@ -103,23 +107,6 @@ springdoc:
     disable-swagger-default-url: true
   cache:
     disabled: true
-
----
-spring:
-  config:
-    activate:
-      on-profile:
-        - h2
-  datasource:
-    url: jdbc:h2:mem:testdb;DB_CLOSE_ON_EXIT=FALSE
-    #    driver-class-name: org.h2.Driver
-    username: sa
-    password: password
-  h2:
-    console:
-      enabled: true
-      settings:
-        web-allow-others: true
 ---
 spring:
   config:
@@ -136,14 +123,6 @@ spring:
   config:
     activate:
       on-profile:
-        - test
-  datasource:
-    url: jdbc:tc:mysql:latest:///testdb
----
-spring:
-  config:
-    activate:
-      on-profile:
         - liquibase
   flyway:
     enabled: false
@@ -154,6 +133,13 @@ spring:
       sequenceBatch: ${app.datasource.batch_size}
 ---
 spring:
+  profiles:
+    group:
+      test:
+        - @profile.db.test@
+        - liquibase
+---
+spring:
   config:
     activate:
       on-profile:
@@ -162,4 +148,60 @@ spring:
     url: jdbc:postgresql://localhost:5432/amigoscode
     username: amigoscode
     password: password
+---
+spring:
+  config:
+    activate:
+      on-profile:
+        - mysql
+  datasource:
+    url: jdbc:tc:mysql:latest:///testdb
+---
+spring:
+  config:
+    activate:
+      on-profile:
+        - mssql
+  datasource:
+    url: jdbc:tc:sqlserver:latest:///testdb
+---
+spring:
+  config:
+    activate:
+      on-profile:
+        - postgres
+  datasource:
+    url: jdbc:tc:postgresql:latest:///testdb
+---
+spring:
+  config:
+    activate:
+      on-profile:
+        - oracle
+  datasource:
+    url: jdbc:tc:oracle:latest:///testdb
+---
+spring:
+  config:
+    activate:
+      on-profile:
+        - mariadb
+  datasource:
+    url: jdbc:tc:mariadb:latest:///testdb
+---
+spring:
+  config:
+    activate:
+      on-profile:
+        - cockroachdb
+  datasource:
+    url: jdbc:tc:cockroach:latest:///testdb
+---
+spring:
+  config:
+    activate:
+      on-profile:
+        - db2
+  datasource:
+    url: jdbc:tc:db2:latest:///testdb
 ---

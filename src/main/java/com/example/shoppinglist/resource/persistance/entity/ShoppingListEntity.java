@@ -19,7 +19,7 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @Table(name = "shopping_list", indexes = {
-        @Index(name = "index", columnList = "name,type")
+        @Index(name = "in_name_n_type", columnList = "name,type")
 })
 @DynamicUpdate
 @DynamicInsert

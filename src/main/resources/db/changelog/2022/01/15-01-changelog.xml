@@ -59,7 +59,7 @@
         <addUniqueConstraint columnNames="list_id" constraintName="uc_shopping_list_listid" tableName="shopping_list"/>
     </changeSet>
     <changeSet id="1642234919562-7" author="shubham (generated)">
-        <createIndex indexName="index" tableName="shopping_list">
+        <createIndex indexName="in_name_n_type" tableName="shopping_list">
             <column name="name"/>
             <column name="type"/>
         </createIndex>

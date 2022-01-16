@@ -16,7 +16,10 @@
     <description>Demo project for ShoppingList</description>
     <properties>
         <!--suppress UnresolvedMavenProperty -->
-        <version.number>${git.branch}.${git.commit.id.abbrev}</version.number>
+        <version.number>${project.activeProfiles[0].id}.${git.commit.id.abbrev}</version.number>
+        <!--<version.number>${git.branch}.${git.commit.id.abbrev}</version.number>-->
+        <h2.enable>false</h2.enable>
+        <profile.db.test>h2</profile.db.test>
         <java.version>17</java.version>
         <spring-cloud.version>2021.0.0</spring-cloud.version>
         <testcontainers.version>1.16.2</testcontainers.version>
@@ -37,32 +40,13 @@
             **/example/shoppinglist/util/**
         </sonar.coverage.exclusions>
         <formatter-maven-plugin.version>2.17.1</formatter-maven-plugin.version>
-        <dependency-check-maven.version>6.5.2</dependency-check-maven.version>
+        <dependency-check-maven.version>6.5.3</dependency-check-maven.version>
         <!--vulnerable dependency  -->
         <h2.version>2.0.206</h2.version>
         <flyway.version>8.4.1</flyway.version>
-        <liquibase.version>4.6.2</liquibase.version>
+        <liquibase.version>4.7.0</liquibase.version>
     </properties>
     <dependencies>
-        <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <!--<scope>runtime</scope>-->
-        </dependency>
-        <dependency>
-            <groupId>org.liquibase</groupId>
-            <artifactId>liquibase-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <!-- <scope>test</scope> -->
-        </dependency>
-        <dependency>
-            <groupId>org.testcontainers</groupId>
-            <artifactId>mysql</artifactId>
-            <scope>test</scope>
-        </dependency>
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-api</artifactId>
@@ -130,6 +114,10 @@
             <artifactId>flyway-core</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-core</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-circuitbreaker-resilience4j</artifactId>
         </dependency>
@@ -155,11 +143,6 @@
             <artifactId>spring-boot-devtools</artifactId>
             <scope>runtime</scope>
             <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>io.micrometer</groupId>
@@ -329,5 +312,157 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>h2</id>
+            <properties>
+                <h2.enable>true</h2.enable>
+                <profile.db.test>h2</profile.db.test>
+            </properties>
+            <!-- <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation> -->
+            <dependencies>
+                <dependency>
+                    <groupId>com.h2database</groupId>
+                    <artifactId>h2</artifactId>
+                    <scope>runtime</scope>
+                </dependency>
+            </dependencies>
+        </profile>
+        <profile>
+            <id>postgres</id>
+            <properties>
+                <profile.db.test>postgres</profile.db.test>
+            </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>org.postgresql</groupId>
+                    <artifactId>postgresql</artifactId>
+                    <scope>runtime</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.testcontainers</groupId>
+                    <artifactId>postgresql</artifactId>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
+        </profile>
+        <profile>
+            <id>mssql</id>
+            <properties>
+                <profile.db.test>mssql</profile.db.test>
+            </properties>
+            <dependencies>
+                <dependency>
+                    <groupId>com.microsoft.sqlserver</groupId>
+                    <artifactId>mssql-jdbc</artifactId>
+                    <scope>runtime</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.testcontainers</groupId>
+                    <artifactId>mssqlserver</artifactId>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
+        </profile>
+        <profile>
+            <id>mysql</id>
+            <properties>
+                <profile.db.test>mysql</profile.db.test>
+            </properties>
+            <dependencies>
+                <dependency>
+                    <groupId>mysql</groupId>
+                    <artifactId>mysql-connector-java</artifactId>
+                    <scope>runtime</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.testcontainers</groupId>
+                    <artifactId>mysql</artifactId>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
+        </profile>
+        <profile>
+            <id>oracle</id>
+            <properties>
+                <profile.db.test>oracle</profile.db.test>
+            </properties>
+            <!--<activation>
+            	<activeByDefault>true</activeByDefault>
+            </activation>-->
+            <dependencies>
+                <dependency>
+                    <groupId>com.oracle.database.jdbc</groupId>
+                    <artifactId>ojdbc8</artifactId>
+                    <scope>runtime</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.testcontainers</groupId>
+                    <artifactId>oracle-xe</artifactId>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
+        </profile>
+        <profile>
+            <id>mariadb</id>
+            <properties>
+                <profile.db.test>mariadb</profile.db.test>
+            </properties>
+            <dependencies>
+                <dependency>
+                    <groupId>org.mariadb.jdbc</groupId>
+                    <artifactId>mariadb-java-client</artifactId>
+                    <scope>runtime</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.testcontainers</groupId>
+                    <artifactId>mariadb</artifactId>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
+        </profile>
+        <profile>
+            <id>cockroachdb</id>
+            <properties>
+                <profile.db.test>cockroachdb</profile.db.test>
+            </properties>
+            <dependencies>
+                <dependency>
+                    <groupId>org.postgresql</groupId>
+                    <artifactId>postgresql</artifactId>
+                    <scope>runtime</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.testcontainers</groupId>
+                    <artifactId>cockroachdb</artifactId>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
+        </profile>
+        <profile>
+            <id>db2</id>
+            <properties>
+                <profile.db.test>db2</profile.db.test>
+            </properties>
+            <dependencies>
+                <dependency>
+                    <groupId>com.ibm.db2</groupId>
+                    <artifactId>jcc</artifactId>
+                    <scope>runtime</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.testcontainers</groupId>
+                    <artifactId>db2</artifactId>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
 
 </project>
