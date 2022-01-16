@@ -8,3 +8,10 @@
 [stars-url]: https://github.com/shubhamgoel23/shopping-list/stargazers
 [issues-shield]: https://img.shields.io/github/issues/shubhamgoel23/shopping-list.svg?style=for-the-badge
 [issues-url]: https://github.com/shubhamgoel23/shopping-list/issues
+
+
+
+
+
+
+![Alt](https://repobeats.axiom.co/api/embed/f8674f7677befb3f1caed729f2458060dad767a4.svg "Repobeats analytics image")
