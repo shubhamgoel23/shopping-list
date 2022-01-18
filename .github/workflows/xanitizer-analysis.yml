@@ -69,8 +69,8 @@ jobs:
       # Please adapt to run `npm install` in the correct directories.
       # Please adapt, if your project uses another package manager for getting JavaScript libraries.
       # Please comment out, if your project does not use a package manager for getting JavaScript libraries.
-      - name: Install JavaScript libraries
-        run: npm install
+#       - name: Install JavaScript libraries
+#         run: npm install
 
       # Run the security analysis with default settings
       - name: Xanitizer Security Analysis
