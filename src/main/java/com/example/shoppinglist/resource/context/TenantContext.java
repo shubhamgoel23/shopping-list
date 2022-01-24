@@ -10,7 +10,7 @@ public class TenantContext {
 
     }
 
-    public static void setTenant(String tenantId) {
+    public static void setTenantId(String tenantId) {
         log.debug("Setting tenant to {}", tenantId);
         CONTEXT.set(tenantId);
 

@@ -11,7 +11,7 @@ public class CustomerContext {
 
     }
 
-    public static void setTenant(String customerId) {
+    public static void setCustomerId(String customerId) {
         log.debug("Setting customer id to {}", customerId);
         CONTEXT.set(customerId);
 
