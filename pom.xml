@@ -29,6 +29,7 @@
         <owasp-html-sanitizer.version>20211018.2</owasp-html-sanitizer.version>
         <jjwt.version>0.11.2</jjwt.version>
         <jacoco.version>0.8.7</jacoco.version>
+        <hibernate-jpamodelgen.version>5.6.4.Final</hibernate-jpamodelgen.version>
         <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
         <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
         <sonar.jacoco.reportPath>${project.basedir}/../target/jacoco.exec</sonar.jacoco.reportPath>
@@ -47,6 +48,11 @@
         <liquibase.version>4.7.1</liquibase.version>
     </properties>
     <dependencies>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-jpamodelgen</artifactId>
+            <version>${hibernate-jpamodelgen.version}</version>
+        </dependency>
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-api</artifactId>
@@ -244,6 +250,11 @@
                             <artifactId>lombok-mapstruct-binding</artifactId>
                             <version>${lombok-mapstruct-binding.version}</version>
                         </path>
+                        <path>
+                            <groupId>org.hibernate</groupId>
+                            <artifactId>hibernate-jpamodelgen</artifactId>
+                            <version>${hibernate-jpamodelgen.version}</version>
+                        </path>
                     </annotationProcessorPaths>
                     <compilerArgs>
                         <compilerArg>
@@ -320,7 +331,7 @@
                 <h2.enable>true</h2.enable>
                 <profile.db.test>h2</profile.db.test>
             </properties>
-             <activation>
+            <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
             <dependencies>

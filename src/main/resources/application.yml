@@ -6,6 +6,9 @@ logging:
     feign: info
     com.zaxxer.hikari: trace
     com.zaxxer.hikari.HikariConfig: DEBUG
+    org:
+      hibernate:
+        type: trace
   pattern:
     dateformat: yyyy-MM-dd HH:mm:ss.SSS,${app.default.timezone}
 

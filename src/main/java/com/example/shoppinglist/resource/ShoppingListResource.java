@@ -8,7 +8,6 @@ import com.example.shoppinglist.util.CustomPage;
 import com.example.shoppinglist.util.Response;
 import com.example.shoppinglist.util.ResponseBuilder;
 import com.fasterxml.jackson.annotation.JsonView;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -18,10 +17,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/api/v1")
-@RequiredArgsConstructor
-public class ShoppingListResource {
-
-    private final ShoppingListService shoppingListService;
+public record ShoppingListResource(ShoppingListService shoppingListService) {
 
     @PostMapping("/shopping-list")
     public ResponseEntity<Response<Void>> createShoppingList(@Validated(ShoppingListCreate.class) @JsonView({
