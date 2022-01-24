@@ -21,8 +21,13 @@ import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static com.example.shoppinglist.resource.persistance.specification.ItemSpecification.belongsToProductIds;
+import static com.example.shoppinglist.resource.persistance.specification.ItemSpecification.belongsToShoppingListId;
+import static org.springframework.data.jpa.domain.Specification.where;
+
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class ShoppingListService {
 
     private final ShoppingListRepository shoppingListRepository;
@@ -79,7 +84,9 @@ public class ShoppingListService {
         var shoppingListEntity = shoppingListRepository.findById(id)
                 .orElseThrow(() -> new BusinessException(BusinessExceptionReason.INVALID_SHOPPING_LIST_ID));
 
-        var items = itemEntityRepository.findAllByProductIdInAndShoppingListId(shoppingListItemMap.keySet(), shoppingListEntity.getId());
+        var items = itemEntityRepository.findAll(
+                where(belongsToProductIds(shoppingListItemMap.keySet())
+                        .and(belongsToShoppingListId(shoppingListEntity.getId()))));
 
         var entityMap = items.stream().collect(Collectors.toMap(ItemEntity::getProductId, Function.identity()));
 
