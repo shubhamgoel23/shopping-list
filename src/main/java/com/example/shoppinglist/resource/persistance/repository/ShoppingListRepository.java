@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ShoppingListRepository extends JpaRepository<ShoppingListEntity, Long>
-        , JpaSpecificationExecutor<ShoppingListEntity>{
+        , JpaSpecificationExecutor<ShoppingListEntity> {
 
 }
