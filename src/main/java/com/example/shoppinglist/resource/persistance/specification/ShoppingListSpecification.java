@@ -2,6 +2,7 @@ package com.example.shoppinglist.resource.persistance.specification;
 
 import com.example.shoppinglist.resource.context.CustomerContext;
 import com.example.shoppinglist.resource.context.TenantContext;
+import com.example.shoppinglist.resource.persistance.audit.Auditable_;
 import com.example.shoppinglist.resource.persistance.entity.ShoppingListEntity;
 import com.example.shoppinglist.resource.persistance.entity.ShoppingListEntity_;
 import lombok.experimental.UtilityClass;
@@ -18,7 +19,7 @@ public class ShoppingListSpecification {
 
     public static Specification<ShoppingListEntity> belongsToTenantId() {
         return (root, query, criteriaBuilder) ->
-                criteriaBuilder.equal(criteriaBuilder.upper(root.get(ShoppingListEntity_.TENANT_ID)) , TenantContext.getTenantId().toUpperCase());
+                criteriaBuilder.equal(criteriaBuilder.upper(root.get(Auditable_.TENANT_ID)) , TenantContext.getTenantId().toUpperCase());
     }
 
     public static Specification<ShoppingListEntity> belongsToCustomerId() {
