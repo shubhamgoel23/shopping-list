@@ -31,4 +31,4 @@ jobs:
       - name: Login to DockerHub Registry
         run: echo ${{ secrets.DOCKERHUB_PASSWORD }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
       - name: Push the latest Docker image
-        run: docker push docker.io/shubhamgoel23/shoppinglist:h2.${GITHUB_SHA::7}
+        run: docker push docker.io/${{ secrets.DOCKERHUB_USERNAME }}/shoppinglist:h2.${GITHUB_SHA::7}
