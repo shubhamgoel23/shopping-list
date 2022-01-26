@@ -1,15 +1,13 @@
 package com.example.shoppinglist.resource.persistance.audit;
 
+import com.example.shoppinglist.resource.context.TenantContext;
 import com.example.shoppinglist.resource.persistance.listener.LifecycleListener;
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import javax.persistence.Column;
-import javax.persistence.EntityListeners;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.Version;
+import javax.persistence.*;
 
 @Getter
 @MappedSuperclass
@@ -26,5 +24,13 @@ public abstract class Auditable {
     @Column(name = "updatedOn", nullable = false)
     @LastModifiedDate
     private Long updatedOn;
+
+    @Column(name = "tenantId", nullable = false, updatable = false)
+    private String tenantId;
+
+    @PrePersist
+    private void setTenantId(){
+        this.tenantId = TenantContext.getTenantId();
+    }
 
 }

@@ -21,8 +21,8 @@ import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static com.example.shoppinglist.resource.persistance.specification.ItemSpecification.belongsToProductIds;
-import static com.example.shoppinglist.resource.persistance.specification.ItemSpecification.belongsToShoppingListId;
+import static com.example.shoppinglist.resource.persistance.specification.ItemSpecification.*;
+import static com.example.shoppinglist.resource.persistance.specification.ShoppingListSpecification.*;
 import static org.springframework.data.jpa.domain.Specification.where;
 
 @Service
@@ -46,7 +46,11 @@ public class ShoppingListService {
 
     @Transactional(readOnly = true, propagation = Propagation.REQUIRES_NEW)
     public CustomPage<ShoppingListDto> getShoppingList(int page, int size) {
-        var shoppingListPage = shoppingListRepository.findAll(PageRequest.of(page, size));
+
+        var shoppingListPage = shoppingListRepository.findAll(
+                where(belongsToTenantId()
+                        .and(belongsToCustomerId()))
+                ,PageRequest.of(page, size));
 
         return CustomPage.<ShoppingListDto>builder()
                 .content(shoppingListMapper.fromShoppingListEntity(shoppingListPage.getContent()))
@@ -57,51 +61,66 @@ public class ShoppingListService {
     }
 
     @Transactional(readOnly = true, propagation = Propagation.REQUIRES_NEW)
-    public ShoppingListDto getShoppingListById(Long id) {
-        var shoppingListEntity = shoppingListRepository.findById(id)
-                .orElseThrow(() -> new BusinessException(BusinessExceptionReason.INVALID_SHOPPING_LIST_ID));
+    public ShoppingListDto getShoppingListById(String listId) {
+
+        var shoppingListEntity = shoppingListRepository.findOne(
+                where(belongsToTenantId()
+                        .and(belongsToCustomerId().and(belongsToListId(listId))))
+        ).orElseThrow(() -> new BusinessException(BusinessExceptionReason.INVALID_SHOPPING_LIST_ID));
+
         return shoppingListMapper.fromShoppingListEntity(shoppingListEntity);
 
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW, isolation = Isolation.REPEATABLE_READ)
-    public void updateShoppingListById(Long id, ShoppingListDto shoppingListDto) {
-        var shoppingListEntity = shoppingListRepository.findById(id)
-                .orElseThrow(() -> new BusinessException(BusinessExceptionReason.INVALID_SHOPPING_LIST_ID));
+    public void updateShoppingListById(String listId, ShoppingListDto shoppingListDto) {
+        var shoppingListEntity = shoppingListRepository.findOne(
+                where(belongsToTenantId()
+                        .and(belongsToCustomerId().and(belongsToListId(listId))))
+        ).orElseThrow(() -> new BusinessException(BusinessExceptionReason.INVALID_SHOPPING_LIST_ID));
+
         shoppingListEntity.setName(shoppingListDto.name());
         shoppingListRepository.save(shoppingListEntity);
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW, isolation = Isolation.REPEATABLE_READ)
-    public void deleteShoppingListById(Long id) {
-        if (!shoppingListRepository.existsById(id))
-            throw new BusinessException(BusinessExceptionReason.INVALID_SHOPPING_LIST_ID);
-        shoppingListRepository.deleteById(id);
+    public void deleteShoppingListById(String listId) {
+        var shoppingListEntity = shoppingListRepository.findOne(
+                where(belongsToTenantId()
+                        .and(belongsToCustomerId().and(belongsToListId(listId))))
+        ).orElseThrow(() -> new BusinessException(BusinessExceptionReason.INVALID_SHOPPING_LIST_ID));
+
+        shoppingListRepository.delete(shoppingListEntity);
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW, isolation = Isolation.REPEATABLE_READ)
-    public void additemInShoppingList(Long id, Map<String, ItemDto> shoppingListItemMap) {
-        var shoppingListEntity = shoppingListRepository.findById(id)
-                .orElseThrow(() -> new BusinessException(BusinessExceptionReason.INVALID_SHOPPING_LIST_ID));
+    public void addItemInShoppingList(String listId, Map<String, ItemDto> shoppingListItemMap) {
+        var shoppingListEntity = shoppingListRepository.findOne(
+                where(belongsToTenantId()
+                        .and(belongsToCustomerId().and(belongsToListId(listId))))
+        ).orElseThrow(() -> new BusinessException(BusinessExceptionReason.INVALID_SHOPPING_LIST_ID));
 
         var items = itemEntityRepository.findAll(
                 where(belongsToProductIds(shoppingListItemMap.keySet())
                         .and(belongsToShoppingListId(shoppingListEntity.getId()))));
 
-        var entityMap = items.stream().collect(Collectors.toMap(ItemEntity::getProductId, Function.identity()));
+        var entityMap = items.stream().collect(Collectors.toMap(item->item.getProductId().toUpperCase() , Function.identity()));
 
         var entitiesToBeDeleted = new ArrayList<ItemEntity>();
         var entitiesToBeAdded = new ArrayList<ItemEntity>();
         shoppingListItemMap.forEach((k, v) -> {
-            if (v.quantity() <= 0 && entityMap.containsKey(k)) {
-                entitiesToBeDeleted.add(entityMap.get(k));
-                entityMap.remove(k);
-            } else if (v.quantity() > 0 && entityMap.containsKey(k)) {
-                var itemEntity = entityMap.get(k);
+            if (v.quantity() <= 0 && entityMap.containsKey(k.toUpperCase())) {
+                entitiesToBeDeleted.add(entityMap.get(k.toUpperCase()));
+                entityMap.remove(k.toUpperCase());
+            } else if (v.quantity() > 0 && entityMap.containsKey(k.toUpperCase())) {
+                var itemEntity = entityMap.get(k.toUpperCase());
                 itemEntity.setQuantity(v.quantity());
-            } else if (v.quantity() > 0 && !entityMap.containsKey(k)) {
-                var itemEntity = ItemEntity.builder().productId(k).quantity(v.quantity())
-                        .shoppingList(shoppingListEntity).build();
+            } else if (v.quantity() > 0 && !entityMap.containsKey(k.toUpperCase())) {
+                var itemEntity = ItemEntity.builder()
+                        .productId(k)
+                        .quantity(v.quantity())
+                        .shoppingList(shoppingListEntity)
+                        .build();
                 entitiesToBeAdded.add(itemEntity);
             }
         });
@@ -112,11 +131,16 @@ public class ShoppingListService {
     }
 
     @Transactional(readOnly = true, propagation = Propagation.REQUIRES_NEW)
-    public CustomPage<ItemDto> getShoppingListItems(Long id, int page, int size) {
-        if (!shoppingListRepository.existsById(id))
-            throw new BusinessException(BusinessExceptionReason.INVALID_SHOPPING_LIST_ID);
+    public CustomPage<ItemDto> getShoppingListItems(String listId, int page, int size) {
 
-        var items = itemEntityRepository.findAllByShoppingListId(id, PageRequest.of(page, size));
+        var shoppingListEntity =shoppingListRepository.findOne(
+                where(belongsToTenantId()
+                        .and(belongsToCustomerId().and(belongsToListId(listId))))
+        ).orElseThrow(() -> new BusinessException(BusinessExceptionReason.INVALID_SHOPPING_LIST_ID));
+
+        var items = itemEntityRepository.findAll(
+                where(belongsToShoppingListId(shoppingListEntity.getId())), PageRequest.of(page, size));
+
         return CustomPage.<ItemDto>builder().content(shoppingListMapper.fromItemEntity(items.getContent()))
                 .pageable(CustomPagebale.builder().pageNumber(items.getPageable().getPageNumber())
                         .pageSize(items.getPageable().getPageSize()).totalElements(items.getTotalElements()).build())
@@ -124,21 +148,27 @@ public class ShoppingListService {
     }
 
     @Transactional(readOnly = true, propagation = Propagation.REQUIRES_NEW)
-    public ItemDto getShoppingListItemByProductId(Long id, String productId) {
-        if (!shoppingListRepository.existsById(id))
-            throw new BusinessException(BusinessExceptionReason.INVALID_SHOPPING_LIST_ID);
+    public ItemDto getShoppingListItemByProductId(String listId, String productId) {
+        var shoppingListEntity = shoppingListRepository.findOne(
+                where(belongsToTenantId()
+                        .and(belongsToCustomerId().and(belongsToListId(listId))))
+        ).orElseThrow(() -> new BusinessException(BusinessExceptionReason.INVALID_SHOPPING_LIST_ID));
 
-        var entity = itemEntityRepository.findByProductIdAndShoppingListId(productId, id)
+        var entity = itemEntityRepository.findOne(
+                where(belongsToShoppingListId(shoppingListEntity.getId()).and(belongsToProductId(productId))))
                 .orElseThrow(() -> new BusinessException(BusinessExceptionReason.INVALID_PRODUCT_ID));
         return shoppingListMapper.fromItemEntity(entity);
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW, isolation = Isolation.REPEATABLE_READ)
-    public void updateShoppingListItemsByProductId(Long id, String productId, ItemDto itemDto) {
-        if (!shoppingListRepository.existsById(id))
-            throw new BusinessException(BusinessExceptionReason.INVALID_SHOPPING_LIST_ID);
+    public void updateShoppingListItemsByProductId(String listId, String productId, ItemDto itemDto) {
+        var shoppingListEntity = shoppingListRepository.findOne(
+                where(belongsToTenantId()
+                        .and(belongsToCustomerId().and(belongsToListId(listId))))
+        ).orElseThrow(() -> new BusinessException(BusinessExceptionReason.INVALID_SHOPPING_LIST_ID));
 
-        var entity = itemEntityRepository.findByProductIdAndShoppingListId(productId, id)
+        var entity = itemEntityRepository.findOne(
+                        where(belongsToShoppingListId(shoppingListEntity.getId()).and(belongsToProductId(productId))))
                 .orElseThrow(() -> new BusinessException(BusinessExceptionReason.INVALID_PRODUCT_ID));
         entity.setQuantity(itemDto.quantity());
     }

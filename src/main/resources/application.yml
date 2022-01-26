@@ -15,6 +15,7 @@ logging:
 spring:
   profiles:
     active:
+#      - postgres_live
       - liquibase
   autoconfigure:
     exclude:
@@ -110,6 +111,10 @@ springdoc:
     disable-swagger-default-url: true
   cache:
     disabled: true
+  api-docs:
+    groups:
+      enabled: true
+
 ---
 spring:
   config:
@@ -126,12 +131,22 @@ spring:
   config:
     activate:
       on-profile:
+        - postgres_live
+  datasource:
+    url: jdbc:postgresql://localhost:5432/amigoscode
+    username: amigoscode
+    password: password
+---
+spring:
+  config:
+    activate:
+      on-profile:
         - liquibase
   flyway:
     enabled: false
   liquibase:
     enabled: true
-    change-log: classpath:/db/changelog/2022/01/15-01-changelog.xml
+    change-log: classpath:/db/changelog/db.changelog-master.yaml
     parameters:
       sequenceBatch: ${app.datasource.batch_size}
 ---
@@ -141,16 +156,6 @@ spring:
       test:
         - @profile.db.test@
         - liquibase
----
-spring:
-  config:
-    activate:
-      on-profile:
-        - postgres
-  datasource:
-    url: jdbc:postgresql://localhost:5432/amigoscode
-    username: amigoscode
-    password: password
 ---
 spring:
   config:

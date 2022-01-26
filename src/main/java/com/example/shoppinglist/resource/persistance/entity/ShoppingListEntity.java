@@ -1,5 +1,6 @@
 package com.example.shoppinglist.resource.persistance.entity;
 
+import com.example.shoppinglist.resource.context.CustomerContext;
 import com.example.shoppinglist.resource.persistance.audit.Auditable;
 import com.example.shoppinglist.util.AppConstant;
 import lombok.*;
@@ -46,9 +47,18 @@ public class ShoppingListEntity extends Auditable {
     @Column(name = "type", nullable = false, updatable = false)
     private String type;
 
+    @Setter(AccessLevel.NONE)
+    @Column(name = "customerId", nullable = false, updatable = false)
+    private String customerId;
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "shoppingList")
     @Builder.Default
     @ToString.Exclude
     private List<ItemEntity> items = new ArrayList<>();
+
+    @PrePersist
+    private void setCustomerId(){
+        this.customerId = CustomerContext.getCustomerId();
+    }
 
 }

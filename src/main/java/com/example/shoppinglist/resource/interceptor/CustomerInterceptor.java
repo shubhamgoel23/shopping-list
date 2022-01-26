@@ -24,8 +24,7 @@ public class CustomerInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         String customerId = request.getHeader(CUSTOMER_HTTP_HEADER);
 
-        String requestUri = request.getRequestURI();
-        if (requestUri.startsWith("/api/") && ObjectUtils.isEmpty(customerId))
+        if (ObjectUtils.isEmpty(customerId))
             throw new BusinessException(BusinessExceptionReason.CUSTOMER_NOT_FOUND);
 
         CustomerContext.setCustomerId(customerId);

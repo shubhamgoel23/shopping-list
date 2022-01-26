@@ -4,6 +4,10 @@ import com.example.shoppinglist.resource.persistance.entity.ItemEntity;
 import com.example.shoppinglist.resource.persistance.entity.ItemEntity_;
 import lombok.experimental.UtilityClass;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.lang.NonNull;
+
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @UtilityClass
 public class ItemSpecification {
@@ -16,11 +20,14 @@ public class ItemSpecification {
 
     public static Specification<ItemEntity> belongsToProductId(String productId) {
         return (root, query, criteriaBuilder) ->
-                criteriaBuilder.equal(root.get(ItemEntity_.PRODUCT_ID), productId);
+                criteriaBuilder.equal(criteriaBuilder.upper(root.get(ItemEntity_.PRODUCT_ID)), productId.toUpperCase());
     }
 
-    public static Specification<ItemEntity> belongsToProductIds(Iterable<String> productIds) {
+    public static Specification<ItemEntity> belongsToProductIds(@NonNull Iterable<String> productIds) {
         return (root, query, criteriaBuilder) ->
-                criteriaBuilder.in(root.get(ItemEntity_.PRODUCT_ID)).value(productIds);
+                criteriaBuilder.upper(root.get(ItemEntity_.PRODUCT_ID)).in(StreamSupport
+                        .stream(productIds.spliterator(),false)
+                        .map(String::toUpperCase)
+                        .collect(Collectors.toSet()));
     }
 }

@@ -6,10 +6,10 @@
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.5.xsd"
         objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
     <changeSet id="1642234919562-1" author="shubham (generated)">
-        <createSequence incrementBy="${sequenceBatch}" sequenceName="item_sequence" startValue="1"/>
+        <createSequence incrementBy="500" sequenceName="item_sequence" startValue="1"/>
     </changeSet>
     <changeSet id="1642234919562-2" author="shubham (generated)">
-        <createSequence incrementBy="${sequenceBatch}" sequenceName="list_sequence" startValue="1"/>
+        <createSequence incrementBy="500" sequenceName="list_sequence" startValue="1"/>
     </changeSet>
     <changeSet id="1642234919562-3" author="shubham (generated)">
         <createTable tableName="item">

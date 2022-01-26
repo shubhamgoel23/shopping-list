@@ -24,8 +24,7 @@ public class TenantInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         String tenantId = request.getHeader(TENANT_HTTP_HEADER);
 
-        String requestUri = request.getRequestURI();
-        if (requestUri.startsWith("/api/") && ObjectUtils.isEmpty(tenantId))
+        if (ObjectUtils.isEmpty(tenantId))
             throw new BusinessException(BusinessExceptionReason.TENANT_NOT_FOUND);
 
         TenantContext.setTenantId(tenantId);
