@@ -23,7 +23,7 @@ jobs:
           distribution: 'temurin'
           cache: maven
       - name: Build Docker Image
-        run: mvn spring-boot:build-image -DskipTests -Dspring.native.verbose=true D-initialize-at-run-time=java.sql.DriverManager -Dinitialize-at-build-time=org.hibernate.internal.util.ReflectHelper,org.springframework.boot.validation.MessageInterpolatorFactory --file  pom.xml
+        run: mvn spring-boot:build-image -DskipTests -Dspring.native.verbose=true -Dinitialize-at-run-time=java.sql.DriverManager -Dinitialize-at-build-time=org.hibernate.internal.util.ReflectHelper,org.springframework.boot.validation.MessageInterpolatorFactory --file  pom.xml
       - name: Login to DockerHub Registry
         run: echo ${{ secrets.DOCKERHUB_PASSWORD }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
       - name: Push the latest Docker image
