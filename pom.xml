@@ -432,9 +432,9 @@
                 <h2.enable>true</h2.enable>
                 <profile.db.test>h2</profile.db.test>
             </properties>
-            <activation>
+            <!--<activation>
                 <activeByDefault>true</activeByDefault>
-            </activation>
+            </activation>-->
             <dependencies>
                 <dependency>
                     <groupId>com.h2database</groupId>
@@ -448,9 +448,9 @@
             <properties>
                 <profile.db.test>postgres</profile.db.test>
             </properties>
-            <!--<activation>
+            <activation>
                 <activeByDefault>true</activeByDefault>
-            </activation>-->
+            </activation>
             <dependencies>
                 <dependency>
                     <groupId>org.postgresql</groupId>
