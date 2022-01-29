@@ -31,3 +31,9 @@ build/
 
 ### VS Code ###
 .vscode/
+/.jpb/jpb-settings.xml
+/.mvn/wrapper/maven-wrapper.jar
+/.mvn/wrapper/maven-wrapper.properties
+/mvnw
+/mvnw.cmd
+/.jpb/persistence-units.xml
