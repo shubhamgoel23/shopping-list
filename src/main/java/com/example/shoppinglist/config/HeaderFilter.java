@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.models.OpenAPI;
 import org.springdoc.core.customizers.OpenApiCustomiser;
 
+//filter apis based on specific criteria for swagger documentation group
 public class HeaderFilter implements OpenApiCustomiser {
 
     private final String headerName;
