@@ -120,17 +120,6 @@ spring:
   config:
     activate:
       on-profile:
-        - flyway
-  flyway:
-    enabled: true
-    baseline-on-migrate: true
-  liquibase:
-    enabled: false
----
-spring:
-  config:
-    activate:
-      on-profile:
         - postgres_live
   datasource:
     url: jdbc:postgresql://localhost:5432/amigoscode
