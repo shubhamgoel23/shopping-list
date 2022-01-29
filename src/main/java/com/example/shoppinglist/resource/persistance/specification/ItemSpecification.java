@@ -26,7 +26,7 @@ public class ItemSpecification {
     public static Specification<ItemEntity> belongsToProductIds(@NonNull Iterable<String> productIds) {
         return (root, query, criteriaBuilder) ->
                 criteriaBuilder.upper(root.get(ItemEntity_.PRODUCT_ID)).in(StreamSupport
-                        .stream(productIds.spliterator(),false)
+                        .stream(productIds.spliterator(), false)
                         .map(String::toUpperCase)
                         .collect(Collectors.toSet()));
     }

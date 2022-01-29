@@ -11,14 +11,14 @@ public class CustomerContext {
 
     }
 
-    public static void setCustomerId(String customerId) {
-        log.debug("Setting customer id to {}", customerId);
-        CONTEXT.set(customerId);
+    public static String getCustomerId() {
+        return CONTEXT.get();
 
     }
 
-    public static String getCustomerId() {
-        return CONTEXT.get();
+    public static void setCustomerId(String customerId) {
+        log.debug("Setting customer id to {}", customerId);
+        CONTEXT.set(customerId);
 
     }
 

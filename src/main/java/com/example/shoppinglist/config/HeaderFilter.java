@@ -18,7 +18,7 @@ public class HeaderFilter implements OpenApiCustomiser {
 //        openApi.getPaths().entrySet().stream().map()
         openApi.getPaths().entrySet().removeIf(path -> path.getValue().readOperations().stream()
                 .anyMatch(operation -> operation.getParameters() == null
-                        || operation .getParameters().stream().noneMatch(
+                        || operation.getParameters().stream().noneMatch(
                         parameter -> ParameterIn.HEADER.toString().equals(parameter.getIn())
                                 && parameter.getName().equals(headerName)
                 )));

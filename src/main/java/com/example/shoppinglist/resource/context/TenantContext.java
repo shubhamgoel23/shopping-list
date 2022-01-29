@@ -10,14 +10,14 @@ public class TenantContext {
 
     }
 
-    public static void setTenantId(String tenantId) {
-        log.debug("Setting tenant to {}", tenantId);
-        CONTEXT.set(tenantId);
+    public static String getTenantId() {
+        return CONTEXT.get();
 
     }
 
-    public static String getTenantId() {
-        return CONTEXT.get();
+    public static void setTenantId(String tenantId) {
+        log.debug("Setting tenant to {}", tenantId);
+        CONTEXT.set(tenantId);
 
     }
 

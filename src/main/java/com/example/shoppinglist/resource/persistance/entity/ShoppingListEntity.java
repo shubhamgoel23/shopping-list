@@ -1,6 +1,8 @@
 package com.example.shoppinglist.resource.persistance.entity;
 
+import com.example.shoppinglist.resource.ShoppingListType;
 import com.example.shoppinglist.resource.context.CustomerContext;
+import com.example.shoppinglist.resource.persistance.ShoppingListTypeConverter;
 import com.example.shoppinglist.resource.persistance.audit.Auditable;
 import com.example.shoppinglist.util.AppConstant;
 import lombok.*;
@@ -20,7 +22,8 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @Table(name = "shopping_list", indexes = {
-        @Index(name = "in_name_n_type", columnList = "name,type")
+        @Index(name = "in_customerId_n_tenantId", columnList = "customerId,tenantId"),
+        @Index(name = "in_name_n_type_n_customerId_tenantId", columnList = "name,type,customerId,tenantId", unique = true)
 })
 @DynamicUpdate
 @DynamicInsert
@@ -44,8 +47,9 @@ public class ShoppingListEntity extends Auditable {
     @Column(name = "name", nullable = false)
     private String name;
 
+    @Convert(converter = ShoppingListTypeConverter.class)
     @Column(name = "type", nullable = false, updatable = false)
-    private String type;
+    private ShoppingListType type;
 
     @Setter(AccessLevel.NONE)
     @Column(name = "customerId", nullable = false, updatable = false)
@@ -57,7 +61,7 @@ public class ShoppingListEntity extends Auditable {
     private List<ItemEntity> items = new ArrayList<>();
 
     @PrePersist
-    private void setCustomerId(){
+    private void setCustomerId() {
         this.customerId = CustomerContext.getCustomerId();
     }
 

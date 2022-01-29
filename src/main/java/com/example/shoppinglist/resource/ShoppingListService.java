@@ -17,12 +17,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.UUID;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static com.example.shoppinglist.resource.persistance.specification.ItemSpecification.*;
 import static com.example.shoppinglist.resource.persistance.specification.ShoppingListSpecification.*;
+import static com.example.shoppinglist.util.HelperClass.uuid;
 import static org.springframework.data.jpa.domain.Specification.where;
 
 @Service
@@ -36,9 +37,17 @@ public class ShoppingListService {
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void createShoppingList(ShoppingListDto shoppingListDTO) {
+        Optional<ShoppingListEntity> shoppingListEntity = shoppingListRepository.findOne(where(belongsToTenantId())
+                .and(belongsToCustomerId())
+                .and(equalsToName(shoppingListDTO.name()))
+                .and(equalsToType(shoppingListDTO.type()))
+        );
+        if (shoppingListEntity.isPresent())
+            throw new BusinessException(BusinessExceptionReason.SHOPPING_LIST_NAME_ALREADY_PRESENT);
+
         shoppingListRepository
                 .save(ShoppingListEntity.builder()
-                        .listId(UUID.randomUUID().toString())
+                        .listId(uuid.get())
                         .name(shoppingListDTO.name())
                         .type(shoppingListDTO.type())
                         .build());
@@ -47,16 +56,18 @@ public class ShoppingListService {
     @Transactional(readOnly = true, propagation = Propagation.REQUIRES_NEW)
     public CustomPage<ShoppingListDto> getShoppingList(int page, int size) {
 
-        var shoppingListPage = shoppingListRepository.findAll(
-                where(belongsToTenantId()
+        var shoppingListPage = shoppingListRepository.findAll(where(belongsToTenantId()
                         .and(belongsToCustomerId()))
-                ,PageRequest.of(page, size));
+                , PageRequest.of(page, size));
 
         return CustomPage.<ShoppingListDto>builder()
-                .content(shoppingListMapper.fromShoppingListEntity(shoppingListPage.getContent()))
-                .pageable(CustomPageable.builder().pageNumber(shoppingListPage.getPageable().getPageNumber())
+                .content(shoppingListMapper
+                        .fromShoppingListEntity(shoppingListPage.getContent()))
+                .pageable(CustomPageable.builder()
+                        .pageNumber(shoppingListPage.getPageable().getPageNumber())
                         .pageSize(shoppingListPage.getPageable().getPageSize())
-                        .totalElements(shoppingListPage.getTotalElements()).build())
+                        .totalElements(shoppingListPage.getTotalElements())
+                        .build())
                 .build();
     }
 
@@ -104,7 +115,7 @@ public class ShoppingListService {
                 where(belongsToProductIds(shoppingListItemMap.keySet())
                         .and(belongsToShoppingListId(shoppingListEntity.getId()))));
 
-        var entityMap = items.stream().collect(Collectors.toMap(item->item.getProductId().toUpperCase() , Function.identity()));
+        var entityMap = items.stream().collect(Collectors.toMap(item -> item.getProductId().toUpperCase(), Function.identity()));
 
         var entitiesToBeDeleted = new ArrayList<ItemEntity>();
         var entitiesToBeAdded = new ArrayList<ItemEntity>();
@@ -133,7 +144,7 @@ public class ShoppingListService {
     @Transactional(readOnly = true, propagation = Propagation.REQUIRES_NEW)
     public CustomPage<ItemDto> getShoppingListItems(String listId, int page, int size) {
 
-        var shoppingListEntity =shoppingListRepository.findOne(
+        var shoppingListEntity = shoppingListRepository.findOne(
                 where(belongsToTenantId()
                         .and(belongsToCustomerId().and(belongsToListId(listId))))
         ).orElseThrow(() -> new BusinessException(BusinessExceptionReason.INVALID_SHOPPING_LIST_ID));
@@ -155,7 +166,7 @@ public class ShoppingListService {
         ).orElseThrow(() -> new BusinessException(BusinessExceptionReason.INVALID_SHOPPING_LIST_ID));
 
         var entity = itemEntityRepository.findOne(
-                where(belongsToShoppingListId(shoppingListEntity.getId()).and(belongsToProductId(productId))))
+                        where(belongsToShoppingListId(shoppingListEntity.getId()).and(belongsToProductId(productId))))
                 .orElseThrow(() -> new BusinessException(BusinessExceptionReason.INVALID_PRODUCT_ID));
         return shoppingListMapper.fromItemEntity(entity);
     }

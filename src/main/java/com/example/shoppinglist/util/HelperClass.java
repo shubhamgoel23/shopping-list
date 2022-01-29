@@ -11,6 +11,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Collection;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.function.LongSupplier;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
@@ -44,6 +45,7 @@ public class HelperClass {
     public static final Predicate<String> isStringWithoutSpecialCharacters = source -> CharMatcher
             // .anyOf("[$&+,:;=\\\\?@#|/'<>.^*()%!-]")
             .anyOf("'\"`;*%_=&\\\\|*?~<>^()[]{}$\\n\\r").matchesNoneOf(source);
+    public static final Supplier<String> uuid = () -> UUID.randomUUID().toString();
 
     public static final <T> Stream<T> collectionAsStream(Collection<T> collection) {
         return collection == null ? Stream.empty() : collection.stream();

@@ -29,7 +29,7 @@ public abstract class Auditable {
     private String tenantId;
 
     @PrePersist
-    private void setTenantId(){
+    private void setTenantId() {
         this.tenantId = TenantContext.getTenantId();
     }
 

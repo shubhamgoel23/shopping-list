@@ -16,8 +16,8 @@ public record ShoppingListDto(
         String name,
 
         @JsonView({RequestView.ShoppingListCreate.class, ResponseView.ShoppingListBasic.class})
-        @NotBlank(groups = {RequestView.ShoppingListCreate.class})
-        String type
+//        @NotBlank(groups = {RequestView.ShoppingListCreate.class})
+        ShoppingListType type
 
 //        @JsonView({ ResponseView.ShoppingListDetailed.class })
 //        Map<String,ItemDto> shoppingListItemMap
