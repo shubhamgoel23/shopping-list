@@ -54,7 +54,7 @@ public class ShoppingListEntity extends Auditable {
     private ShoppingListType type;
 
     @Setter(AccessLevel.NONE)
-    @Column(name = "customerId", nullable = false, updatable = false)
+    @Column(name = "customerId", nullable = false, updatable = false, length = 36)
     private String customerId;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "shoppingList")
