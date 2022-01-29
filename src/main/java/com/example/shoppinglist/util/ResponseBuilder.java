@@ -12,7 +12,7 @@ public class ResponseBuilder {
     public static <T> ResponseEntity<Response<T>> build(T data, HttpStatus status, String message) {
 
         return ResponseEntity.ok(
-                Response.<T>builder().status(status).statusCode(status.value()).message(message).content(data).build());
+                Response.<T>builder().status(status).statusCode(status.value()).message(message).data(data).build());
     }
 
     public static ResponseEntity<Response<Void>> build(HttpStatus status, String message) {
