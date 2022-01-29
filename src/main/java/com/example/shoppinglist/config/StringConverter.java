@@ -1,9 +1,8 @@
 package com.example.shoppinglist.config;
 
 import org.springframework.core.convert.converter.Converter;
-import org.springframework.stereotype.Component;
 
-@Component
+
 public class StringConverter implements Converter<String, String> {
 
     @Override

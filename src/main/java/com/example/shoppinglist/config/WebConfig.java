@@ -10,12 +10,10 @@ import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.format.FormatterRegistry;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.util.AntPathMatcher;
-import org.springframework.util.PathMatcher;
 import org.springframework.web.servlet.config.annotation.*;
 
 import java.util.List;
@@ -64,8 +62,8 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(tenantInterceptor).addPathPatterns("/*api*/*v1*/*shopping-list*/**");
-        registry.addInterceptor(customerInterceptor).addPathPatterns("/*api*/*v1*/*shopping-list*/**");
+        registry.addInterceptor(tenantInterceptor).addPathPatterns("/api/v1/shopping-list/**");
+        registry.addInterceptor(customerInterceptor).addPathPatterns("/api/v1/shopping-list/**");
 
 
     }
@@ -76,16 +74,22 @@ public class WebConfig implements WebMvcConfigurer {
         return module;
     }
 
-    @Bean
-    public PathMatcher pathMatcher() {
+//    @Bean
+//    public PathMatcher pathMatcher() {
+//
+//        AntPathMatcher pathMatcher = new AntPathMatcher();
+//        pathMatcher.setTrimTokens(true);
+//        return pathMatcher;
+//    }
 
-        AntPathMatcher pathMatcher = new AntPathMatcher();
-        pathMatcher.setTrimTokens(true);
-        return pathMatcher;
-    }
+//    @Override
+//    public void configurePathMatch(PathMatchConfigurer configurer) {
+//        configurer.setPathMatcher(pathMatcher());
+//    }
+
 
     @Override
-    public void configurePathMatch(PathMatchConfigurer configurer) {
-        configurer.setPathMatcher(pathMatcher());
+    public void addFormatters(FormatterRegistry registry) {
+        registry.addConverter(new StringConverter());
     }
 }

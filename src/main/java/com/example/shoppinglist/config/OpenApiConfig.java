@@ -19,7 +19,7 @@ public class OpenApiConfig {
                 .build();
     }
 
-//    @Bean
+    //    @Bean
     GroupedOpenApi testApis() { // group all APIs with `user` in the path
         return GroupedOpenApi.builder()
                 .group("test")
