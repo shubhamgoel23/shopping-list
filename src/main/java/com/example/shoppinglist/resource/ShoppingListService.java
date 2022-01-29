@@ -7,7 +7,7 @@ import com.example.shoppinglist.resource.persistance.entity.ShoppingListEntity;
 import com.example.shoppinglist.resource.persistance.repository.ItemEntityRepository;
 import com.example.shoppinglist.resource.persistance.repository.ShoppingListRepository;
 import com.example.shoppinglist.util.CustomPage;
-import com.example.shoppinglist.util.CustomPagebale;
+import com.example.shoppinglist.util.CustomPageable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -54,7 +54,7 @@ public class ShoppingListService {
 
         return CustomPage.<ShoppingListDto>builder()
                 .content(shoppingListMapper.fromShoppingListEntity(shoppingListPage.getContent()))
-                .pageable(CustomPagebale.builder().pageNumber(shoppingListPage.getPageable().getPageNumber())
+                .pageable(CustomPageable.builder().pageNumber(shoppingListPage.getPageable().getPageNumber())
                         .pageSize(shoppingListPage.getPageable().getPageSize())
                         .totalElements(shoppingListPage.getTotalElements()).build())
                 .build();
@@ -142,7 +142,7 @@ public class ShoppingListService {
                 where(belongsToShoppingListId(shoppingListEntity.getId())), PageRequest.of(page, size));
 
         return CustomPage.<ItemDto>builder().content(shoppingListMapper.fromItemEntity(items.getContent()))
-                .pageable(CustomPagebale.builder().pageNumber(items.getPageable().getPageNumber())
+                .pageable(CustomPageable.builder().pageNumber(items.getPageable().getPageNumber())
                         .pageSize(items.getPageable().getPageSize()).totalElements(items.getTotalElements()).build())
                 .build();
     }

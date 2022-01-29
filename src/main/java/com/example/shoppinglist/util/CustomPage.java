@@ -14,5 +14,5 @@ import java.util.Collection;
 public class CustomPage<T> {
 
     private Collection<T> content;
-    private CustomPagebale pageable;
+    private CustomPageable pageable;
 }
