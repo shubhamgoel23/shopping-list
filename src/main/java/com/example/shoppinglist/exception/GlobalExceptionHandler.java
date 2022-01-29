@@ -1,5 +1,6 @@
 package com.example.shoppinglist.exception;
 
+import com.example.shoppinglist.util.LoggerHelper;
 import com.example.shoppinglist.util.Response;
 import com.example.shoppinglist.util.ResponseBuilder;
 import com.example.shoppinglist.util.ValidationError;
@@ -80,9 +81,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             log.error("Request {} {} failed with reason: {}", response.getMethod(),
                     response.getPath(), response.getReason());
         }
-        log.error("::::::::::::::::::::::::::Stacktrace-BEGINS::::::::::::::::::::::::::", ex);
+        log.error("::::::::::::::::::::::::::Stacktrace-BEGINS:::::::::::::::::::::::::: {}", LoggerHelper.printTop10StackTrace(ex));
         log.error("::::::::::::::::::::::::::Stacktrace-ENDS::::::::::::::::::::::::::");
-
         if (HttpStatus.INTERNAL_SERVER_ERROR.equals(status)) {
             request.setAttribute(WebUtils.ERROR_EXCEPTION_ATTRIBUTE, ex, RequestAttributes.SCOPE_REQUEST);
         }
