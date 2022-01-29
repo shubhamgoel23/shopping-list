@@ -16,7 +16,8 @@ public enum BusinessExceptionReason implements BusinessExceptionPolicy {
     INVALID_PRODUCT_ID("Invalid product id", HttpStatus.BAD_REQUEST),
     TENANT_NOT_FOUND("Tenant Id not found ", HttpStatus.NOT_FOUND),
     CUSTOMER_NOT_FOUND("Customer Id not found ", HttpStatus.NOT_FOUND),
-    SHOPPING_LIST_NAME_ALREADY_PRESENT("Shopping list name already present", HttpStatus.BAD_REQUEST);
+    SHOPPING_LIST_NAME_ALREADY_PRESENT("Shopping list name already present", HttpStatus.BAD_REQUEST),
+    SPECIAL_CHARACTERS_NOT_ALLOWED("Special Characters are not allowed as input", HttpStatus.BAD_REQUEST);
 
     private final String code = this.name();
     private final String message;

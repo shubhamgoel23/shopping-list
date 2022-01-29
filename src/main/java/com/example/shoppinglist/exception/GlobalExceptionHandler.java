@@ -89,8 +89,16 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         Throwable root = ExceptionUtils.getRootCause(ex);
 
         headers.setContentType(MediaType.APPLICATION_JSON);
+
+        String msg ="Oops, Something went wrong!";
+        String reason = root.getClass().getSimpleName();
+        if(root instanceof BusinessException exception){
+            reason = exception.getCode();
+            msg = exception.getMessage();
+        }
+
         body = ObjectUtils.isEmpty(body)
-                ? ResponseBuilder.build(status, "Oops, Something went wrong!", root.getClass().getSimpleName())
+                ? ResponseBuilder.build(status, msg, reason)
                 : body;
 
         return new ResponseEntity<>(body, headers, status);
