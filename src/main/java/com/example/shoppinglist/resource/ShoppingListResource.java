@@ -36,8 +36,8 @@ public record ShoppingListResource(ShoppingListService shoppingListService) {
     @Operation(summary = "Get all shopping list", description = "Get all shopping list", tags = {"shopping list"})
     @GetMapping("/shopping-list")
     @JsonView({ResponseView.ShoppingListBasic.class})
-    public ResponseEntity<Response<CustomPage<ShoppingListDto>>> getShoppingList(@RequestParam int page,
-                                                                                 @RequestParam int size) {
+    public ResponseEntity<Response<CustomPage<ShoppingListDto>>> getShoppingList(@RequestParam(defaultValue = "0", required = false) int page,
+                                                                                 @RequestParam(defaultValue = "10", required = false) int size) {
         return ResponseBuilder.build(shoppingListService.getShoppingList(page, size), HttpStatus.OK,
                 "shopping list received");
     }
@@ -79,7 +79,8 @@ public record ShoppingListResource(ShoppingListService shoppingListService) {
     @GetMapping("/shopping-list/{id}/item")
     @JsonView({ResponseView.ShoppingListItem.class})
     public ResponseEntity<Response<CustomPage<ItemDto>>> getShoppingListItems(@PathVariable String id,
-                                                                              @RequestParam int page, @RequestParam int size) {
+                                                                              @RequestParam(defaultValue = "0", required = false) int page,
+                                                                              @RequestParam(defaultValue = "10", required = false) int size) {
         return ResponseBuilder.build(shoppingListService.getShoppingListItems(id, page, size), HttpStatus.OK,
                 "shopping list items received");
     }
@@ -96,7 +97,8 @@ public record ShoppingListResource(ShoppingListService shoppingListService) {
     @Operation(summary = "update shopping list", description = "update shopping list", tags = {"shopping list"})
     @PutMapping("/shopping-list/{id}/item/{productId}")
     public ResponseEntity<Response<Void>> updateShoppingListItemsByProductId(@PathVariable String id,
-                                                                             @PathVariable String productId, @Validated(ShoppingListUpdateItem.class) @JsonView({
+                                                                             @PathVariable String productId,
+                                                                             @Validated(ShoppingListUpdateItem.class) @JsonView({
             ShoppingListUpdateItem.class}) @RequestBody ItemDto shoppingListItemDto) {
         shoppingListService.updateShoppingListItemsByProductId(id, productId, shoppingListItemDto);
         return ResponseBuilder.build(HttpStatus.OK, "item updated");
