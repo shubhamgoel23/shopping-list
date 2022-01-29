@@ -14,6 +14,7 @@ import javax.persistence.*;
 @EntityListeners(value = {AuditingEntityListener.class, LifecycleListener.class})
 public abstract class Auditable {
 
+    @Column(name = "version")
     @Version
     private Long version;
 
@@ -25,7 +26,7 @@ public abstract class Auditable {
     @LastModifiedDate
     private Long updatedOn;
 
-    @Column(name = "tenantId", nullable = false, updatable = false)
+    @Column(name = "tenantId", nullable = false, updatable = false, length = 36)
     private String tenantId;
 
     @PrePersist

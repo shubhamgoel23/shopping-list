@@ -9,36 +9,36 @@ public class LifecycleListener {
 
     @PrePersist
     public void prePersist(Object o) {
-        log.info("prePersist {}", o);
+        log.debug("prePersist {}", o);
     }
 
     @PostPersist
     public void postPersist(Object o) {
-        log.info("postPersist {}", o);
+        log.debug("postPersist {}", o);
     }
 
     @PreRemove
     public void preRemove(Object o) {
-        log.info("preRemove {}", o);
+        log.debug("preRemove {}", o);
     }
 
     @PostRemove
     public void postRemove(Object o) {
-        log.info("postRemove {}", o);
+        log.debug("postRemove {}", o);
     }
 
     @PreUpdate
     public void preUpdate(Object o) {
-        log.info("preUpdate {}", o);
+        log.debug("preUpdate {}", o);
     }
 
     @PostUpdate
     public void postUpdate(Object o) {
-        log.info("postUpdate {}", o);
+        log.debug("postUpdate {}", o);
     }
 
     @PostLoad
     public void postLoad(Object o) {
-        log.info("postLoad {}", o);
+        log.debug("postLoad {}", o);
     }
 }

@@ -16,8 +16,8 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Entity
 @Table(name = "item", indexes = {
-        @Index(name = "fk_shopping_list_id_index", columnList = "shoppingListId"),
-        @Index(name = "uk_shoppingListId_N_productId_index", columnList = "shoppingListId,productId")
+        @Index(name = "in_shoppingListId", columnList = "shoppingListId"),
+        @Index(name = "in_shoppingListId_n_productId", columnList = "shoppingListId,productId")
 })
 @DynamicUpdate
 @DynamicInsert
@@ -34,7 +34,8 @@ public class ItemEntity extends Auditable {
     @Column(name = "id", nullable = false, updatable = false)
     private Long id;
 
-    @Column(name = "productId", nullable = false)
+    @Setter(AccessLevel.NONE)
+    @Column(name = "productId", nullable = false, updatable = false, length = 36)
     private String productId;
 
     @Column(name = "quantity", nullable = false)

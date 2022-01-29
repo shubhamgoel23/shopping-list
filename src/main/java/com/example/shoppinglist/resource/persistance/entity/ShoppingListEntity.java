@@ -40,15 +40,17 @@ public class ShoppingListEntity extends Auditable {
     @Column(name = "id", nullable = false, updatable = false)
     private Long id;
 
+    @Setter(AccessLevel.NONE)
     @NaturalId
-    @Column(name = "listId", nullable = false, unique = true, updatable = false)
+    @Column(name = "listId", nullable = false, unique = true, updatable = false, length = 36)
     private String listId;
 
-    @Column(name = "name", nullable = false)
+    @Column(name = "name", nullable = false, length = 10)
     private String name;
 
+    @Setter(AccessLevel.NONE)
     @Convert(converter = ShoppingListTypeConverter.class)
-    @Column(name = "type", nullable = false, updatable = false)
+    @Column(name = "type", nullable = false, updatable = false, length = 5)
     private ShoppingListType type;
 
     @Setter(AccessLevel.NONE)
