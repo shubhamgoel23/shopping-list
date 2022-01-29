@@ -1,14 +1,14 @@
 logging:
   level:
     root: info
-    web: info
-    sql: debug
+    web: debug
+    sql: info
     feign: info
-    com.zaxxer.hikari: trace
-    com.zaxxer.hikari.HikariConfig: DEBUG
+    com.zaxxer.hikari: info
+    com.zaxxer.hikari.HikariConfig: info
     org:
       hibernate:
-        type: trace
+        type: info
   pattern:
     dateformat: yyyy-MM-dd HH:mm:ss.SSS,${app.default.timezone}
 
@@ -43,7 +43,7 @@ spring:
       ddl-auto: none
     properties:
       hibernate:
-        generate_statistics: true
+        generate_statistics: false
         format_sql: true
         session.events.log.LOG_QUERIES_SLOWER_THAN_MS: 20
         jdbc:
@@ -102,7 +102,8 @@ app:
   datasource:
     batch_size: 500
 
-springdoc:  default-produces-media-type: application/json
+springdoc:
+  default-produces-media-type: application/json
   swagger-ui:
     path: /swagger-ui.html
     display-request-duration: true
