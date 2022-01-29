@@ -102,7 +102,7 @@ app:
   datasource:
     batch_size: 500
 
-springdoc:
+springdoc:  default-produces-media-type: application/json
   swagger-ui:
     path: /swagger-ui.html
     display-request-duration: true
