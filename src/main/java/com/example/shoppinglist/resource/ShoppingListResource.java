@@ -103,7 +103,7 @@ public class ShoppingListResource {
     public ResponseEntity<Response<Void>> updateShoppingListItemsByProductId(@PathVariable String id,
                                                                              @PathVariable String productId,
                                                                              @Validated(ShoppingListUpdateItem.class) @JsonView({
-            ShoppingListUpdateItem.class}) @RequestBody ItemDto shoppingListItemDto) {
+                                                                                     ShoppingListUpdateItem.class}) @RequestBody ItemDto shoppingListItemDto) {
         shoppingListService.updateShoppingListItemsByProductId(id, productId, shoppingListItemDto);
         return ResponseBuilder.build(HttpStatus.OK, "item updated");
     }

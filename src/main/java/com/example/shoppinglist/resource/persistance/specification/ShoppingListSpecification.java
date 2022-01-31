@@ -47,8 +47,8 @@ public class ShoppingListSpecification {
     }
 
     public static Specification<ShoppingListEntity> belongsToItemProductId(@Nullable String productId) {
-        return (root, query, criteriaBuilder) ->{
-            if(ObjectUtils.isEmpty(productId))
+        return (root, query, criteriaBuilder) -> {
+            if (ObjectUtils.isEmpty(productId))
                 return criteriaBuilder.conjunction();
             final Join<ShoppingListEntity, ItemEntity> items = root.join(ShoppingListEntity_.ITEMS, JoinType.LEFT);
             return criteriaBuilder.equal(criteriaBuilder.upper(items.get(ItemEntity_.PRODUCT_ID)), productId.toUpperCase());

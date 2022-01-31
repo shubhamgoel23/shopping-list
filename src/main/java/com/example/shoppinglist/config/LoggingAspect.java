@@ -10,8 +10,11 @@ import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StopWatch;
+
 import java.lang.reflect.Modifier;
-import java.util.Arrays;
+import java.util.stream.IntStream;
+
+import static com.example.shoppinglist.util.HelperClass.cleanString;
 
 @Aspect
 @Slf4j
@@ -35,13 +38,13 @@ public class LoggingAspect {
         stopWatch.stop();
 
         // Log method execution time
-        log.info("Execution time of " + className + "." + methodName + " :: " + stopWatch.getTotalTimeNanos() + " ns");
+        log.info("Execution time of {}.{} :: {}ms",className,methodName,stopWatch.getTotalTimeMillis());
 
         return result;
     }
 
     @Before(value = "within(@org.springframework.stereotype.Service *)")
-    public void beforeEntering(JoinPoint joinPoint){
+    public void beforeEntering(JoinPoint joinPoint) {
 
         MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
 
@@ -50,21 +53,24 @@ public class LoggingAspect {
         String methodName = methodSignature.getName();
 
         log.info("::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::");
-        log.info("Entering " + className + "." + methodName + " with below parameters details");
-        Arrays.stream(methodSignature.getParameterNames())
-                .forEach(s -> log.info("arg name: {}",s));
-        Arrays.stream(methodSignature.getParameterTypes())
-                .forEach(s -> log.info("arg type: {}", s.getSimpleName()));
-        Arrays.stream(joinPoint.getArgs())
-                .forEach(o -> log.info("arg value: {}", o));
-        log.info("returning type: {}",methodSignature.getReturnType().getSimpleName());
-        log.info("method modifier: {}",Modifier.toString(methodSignature.getModifiers()));
+        log.info("Entering {}.{} with below parameters details", className, methodName);
+
+        var argName = methodSignature.getParameterNames();
+        var argType = methodSignature.getParameterTypes();
+        var argValue = joinPoint.getArgs();
+
+        IntStream.range(0, argName.length).forEach(i -> {
+            log.info("param_{} ([{}] : [{}]) - [{}]", i, argName[i], argType[i].getSimpleName(), cleanString.apply(argValue[i]));
+        });
+
+        log.info("return type: {}", methodSignature.getReturnType().getSimpleName());
+        log.info("method modifier: {}", Modifier.toString(methodSignature.getModifiers()));
         log.info("::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::");
 
     }
 
-    @AfterReturning(value = "within(@org.springframework.stereotype.Service *)",returning = "returnObject")
-    public void afterReturning(JoinPoint joinPoint, Object returnObject){
+    @AfterReturning(value = "within(@org.springframework.stereotype.Service *)", returning = "returnObject")
+    public void afterReturning(JoinPoint joinPoint, Object returnObject) {
 
         MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
 
@@ -72,7 +78,7 @@ public class LoggingAspect {
         String className = methodSignature.getDeclaringType().getSimpleName();
         String methodName = methodSignature.getName();
 
-        log.info(className + "." + methodName + "  exited normally with return value :: {}",returnObject);
+        log.info("{}.{} exited normally with return value as {}", className, methodName, returnObject);
 
     }
 }

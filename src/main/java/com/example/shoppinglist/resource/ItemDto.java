@@ -15,7 +15,7 @@ public record ItemDto(
         @NotBlank(groups = {
                 RequestView.ShoppingListAddItem.class})
         @Size(groups = {
-                RequestView.ShoppingListAddItem.class},max = 36)
+                RequestView.ShoppingListAddItem.class}, max = 36)
         String productId,
 
         @JsonView({RequestView.ShoppingListAddItem.class, RequestView.ShoppingListUpdateItem.class,

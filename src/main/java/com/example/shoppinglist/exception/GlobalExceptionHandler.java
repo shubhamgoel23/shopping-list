@@ -90,9 +90,9 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        String msg ="Oops, Something went wrong!";
+        String msg = "Oops, Something went wrong!";
         String reason = root.getClass().getSimpleName();
-        if(root instanceof BusinessException exception){
+        if (root instanceof BusinessException exception) {
             reason = exception.getCode();
             msg = exception.getMessage();
         }
