@@ -10,6 +10,7 @@ import com.example.shoppinglist.util.ResponseBuilder;
 import com.fasterxml.jackson.annotation.JsonView;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -21,8 +22,10 @@ import java.util.Map;
 @RestController
 @RequestMapping(value = "/api/v1")
 @Tag(name = "Shopping List APIs")
-public record ShoppingListResource(ShoppingListService shoppingListService) {
+@RequiredArgsConstructor
+public class ShoppingListResource {
 
+    private final ShoppingListService shoppingListService;
 
     @Operation(summary = "Create shopping list", description = "Create shopping list", tags = {"shopping list"})
     @PostMapping("/shopping-list")
