@@ -40,8 +40,9 @@ public class ShoppingListResource {
     @GetMapping("/shopping-list")
     @JsonView({ResponseView.ShoppingListBasic.class})
     public ResponseEntity<Response<CustomPage<ShoppingListDto>>> getShoppingList(@RequestParam(defaultValue = "0", required = false) int page,
-                                                                                 @RequestParam(defaultValue = "10", required = false) int size) {
-        return ResponseBuilder.build(shoppingListService.getShoppingList(page, size), HttpStatus.OK,
+                                                                                 @RequestParam(defaultValue = "10", required = false) int size,
+                                                                                 @RequestParam(required = false) String productId) {
+        return ResponseBuilder.build(shoppingListService.getShoppingList(page, size, productId), HttpStatus.OK,
                 "shopping list received");
     }
 

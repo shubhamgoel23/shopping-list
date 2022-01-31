@@ -57,7 +57,7 @@ public class ShoppingListEntity extends Auditable {
     @Column(name = "customerId", nullable = false, updatable = false, length = 36)
     private String customerId;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "shoppingList")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "shoppingList", cascade = CascadeType.REMOVE,orphanRemoval = true)
     @Builder.Default
     @ToString.Exclude
     private List<ItemEntity> items = new ArrayList<>();

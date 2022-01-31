@@ -54,10 +54,10 @@ public class ShoppingListService {
     }
 
     @Transactional(readOnly = true, propagation = Propagation.REQUIRES_NEW)
-    public CustomPage<ShoppingListDto> getShoppingList(int page, int size) {
+    public CustomPage<ShoppingListDto> getShoppingList(int page, int size, String productId) {
 
         var shoppingListPage = shoppingListRepository.findAll(where(belongsToTenantId()
-                        .and(belongsToCustomerId()))
+                        .and(belongsToCustomerId()).and(belongsToItemProductId(productId)))
                 , PageRequest.of(page, size));
 
         return CustomPage.<ShoppingListDto>builder()
