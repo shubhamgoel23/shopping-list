@@ -81,8 +81,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             log.error("Request {} {} failed with reason: {}", response.getMethod(),
                     response.getPath(), response.getReason());
         }
-        log.error("::::::::::::::::::::::::::Stacktrace-BEGINS:::::::::::::::::::::::::: {}", LoggerHelper.printTop10StackTrace(ex));
-        log.error("::::::::::::::::::::::::::Stacktrace-ENDS::::::::::::::::::::::::::");
+        log.error(LoggerHelper.printTop10StackTrace(ex));
+
         if (HttpStatus.INTERNAL_SERVER_ERROR.equals(status)) {
             request.setAttribute(WebUtils.ERROR_EXCEPTION_ATTRIBUTE, ex, RequestAttributes.SCOPE_REQUEST);
         }

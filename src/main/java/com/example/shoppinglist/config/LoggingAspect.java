@@ -52,20 +52,18 @@ public class LoggingAspect {
         String className = methodSignature.getDeclaringType().getSimpleName();
         String methodName = methodSignature.getName();
 
-        log.info("::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::");
-        log.info("Entering {}.{} with below parameters details", className, methodName);
+        log.info("Entering {}.{} with below details", className, methodName);
 
         var argName = methodSignature.getParameterNames();
         var argType = methodSignature.getParameterTypes();
         var argValue = joinPoint.getArgs();
 
-        IntStream.range(0, argName.length).forEach(i -> {
-            log.info("param_{} ([{}] : [{}]) - [{}]", i, argName[i], argType[i].getSimpleName(), cleanString.apply(argValue[i]));
-        });
+        IntStream.range(0, argName.length).forEach(i ->
+            log.info("param_{} ([{}] : [{}]) - [{}]", i, argName[i], argType[i].getSimpleName(), cleanString.apply(argValue[i]))
+        );
 
         log.info("return type: {}", methodSignature.getReturnType().getSimpleName());
         log.info("method modifier: {}", Modifier.toString(methodSignature.getModifiers()));
-        log.info("::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::");
 
     }
 
