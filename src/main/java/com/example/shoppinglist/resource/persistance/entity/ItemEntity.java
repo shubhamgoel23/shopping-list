@@ -5,8 +5,10 @@ import com.example.shoppinglist.util.AppConstant;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
+
 
 @Builder
 @Getter
@@ -38,6 +40,7 @@ public class ItemEntity extends Auditable {
     @Column(name = "productId", nullable = false, updatable = false, length = 36)
     private String productId;
 
+    @Audited
     @Column(name = "quantity", nullable = false)
     private Integer quantity;
 

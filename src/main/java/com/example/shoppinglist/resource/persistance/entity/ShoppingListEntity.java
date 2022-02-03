@@ -9,10 +9,12 @@ import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.NaturalId;
+import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+
 
 @Builder
 @Getter
@@ -45,6 +47,7 @@ public class ShoppingListEntity extends Auditable {
     @Column(name = "listId", nullable = false, unique = true, updatable = false, length = 36)
     private String listId;
 
+    @Audited
     @Column(name = "name", nullable = false, length = 10)
     private String name;
 
