@@ -5,10 +5,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.web.header.writers.ContentSecurityPolicyHeaderWriter;
 import org.springframework.security.web.header.writers.XContentTypeOptionsHeaderWriter;
-import org.springframework.security.web.header.writers.XXssProtectionHeaderWriter;
-import org.springframework.security.web.header.writers.frameoptions.XFrameOptionsHeaderWriter;
 
 @Configuration
 @EnableWebSecurity
@@ -20,9 +17,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .headers().defaultsDisabled()
                 .contentTypeOptions(contentTypeOptionsConfig -> new XContentTypeOptionsHeaderWriter())
-                .contentSecurityPolicy(contentSecurityPolicyConfig -> new ContentSecurityPolicyHeaderWriter())
-                .frameOptions(frameOptionsConfig -> new XFrameOptionsHeaderWriter(XFrameOptionsHeaderWriter.XFrameOptionsMode.DENY))
-                .xssProtection(xXssConfig -> new XXssProtectionHeaderWriter())
                 .and()
                 .csrf().disable();
 
