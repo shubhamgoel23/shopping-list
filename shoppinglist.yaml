@@ -1,6 +1,6 @@
 services:
   shoppinglist:
-    image: shubhamgoel23/shoppinglist:h2.fe4efb7
+    image: shubhamgoel23/shoppinglist:h2
     hostname: shoppinglist
     deploy:
       replicas: 1

@@ -208,6 +208,8 @@
                         <builder>paketobuildpacks/builder:tiny</builder>
                         <name>docker.io/shubhamgoel23/${project.artifactId}:${version.number}</name>
                         <env>
+                            <BPE_APPEND_JAVA_TOOL_OPTIONS>-Djava.security.egd=file:/dev/urandom</BPE_APPEND_JAVA_TOOL_OPTIONS>
+                            <BPE_DELIM_JAVA_TOOL_OPTIONS xml:space="preserve"> </BPE_DELIM_JAVA_TOOL_OPTIONS>
                             <BP_BINARY_COMPRESSION_METHOD>upx</BP_BINARY_COMPRESSION_METHOD>
                         </env>
                     </image>
