@@ -1,13 +1,11 @@
 package com.example.shoppinglist.resource.persistance.entity;
 
-import com.example.shoppinglist.resource.persistance.listener.LifecycleListener;
 import com.example.shoppinglist.util.AppConstant;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.envers.RevisionEntity;
 import org.hibernate.envers.RevisionNumber;
 import org.hibernate.envers.RevisionTimestamp;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 

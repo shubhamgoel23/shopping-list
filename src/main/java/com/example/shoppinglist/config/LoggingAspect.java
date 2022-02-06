@@ -38,7 +38,7 @@ public class LoggingAspect {
         stopWatch.stop();
 
         // Log method execution time
-        log.info("Execution time of {}.{} :: {}ms",className,methodName,stopWatch.getTotalTimeMillis());
+        log.info("Execution time of {}.{} :: {}ms", className, methodName, stopWatch.getTotalTimeMillis());
 
         return result;
     }
@@ -59,7 +59,7 @@ public class LoggingAspect {
         var argValue = joinPoint.getArgs();
 
         IntStream.range(0, argName.length).forEach(i ->
-            log.info("param_{} ([{}] : [{}]) - [{}]", i, argName[i], argType[i].getSimpleName(), cleanString.apply(argValue[i]))
+                log.info("param_{} ([{}] : [{}]) - [{}]", i, argName[i], argType[i].getSimpleName(), cleanString.apply(argValue[i]))
         );
 
         log.info("return type: {}", methodSignature.getReturnType().getSimpleName());

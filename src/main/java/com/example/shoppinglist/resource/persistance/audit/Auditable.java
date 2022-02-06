@@ -3,6 +3,7 @@ package com.example.shoppinglist.resource.persistance.audit;
 import com.example.shoppinglist.resource.context.TenantContext;
 import com.example.shoppinglist.resource.persistance.listener.LifecycleListener;
 import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -24,6 +25,7 @@ public abstract class Auditable {
     @CreatedDate
     private Long createdOn;
 
+    @Setter
     @Column(name = "updatedOn", nullable = false)
     @LastModifiedDate
     private Long updatedOn;

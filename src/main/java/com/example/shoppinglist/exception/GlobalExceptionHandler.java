@@ -88,7 +88,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         }
         Throwable root = ExceptionUtils.getRootCause(ex);
 
-        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setContentType(MediaType.APPLICATION_PROBLEM_JSON);
 
         String msg = "Oops, Something went wrong!";
         String reason = root.getClass().getSimpleName();

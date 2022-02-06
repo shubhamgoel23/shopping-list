@@ -51,4 +51,11 @@ public class ItemEntity extends Auditable {
 
     @Column(name = "shoppingListId", insertable = false, updatable = false)
     private Long shoppingListId;
+
+    @PrePersist
+    @PreRemove
+    @PreUpdate
+    private void isModified() {
+        this.shoppingList.setUpdatedOn(this.getUpdatedOn());
+    }
 }
