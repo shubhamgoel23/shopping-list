@@ -117,17 +117,6 @@ springdoc:
   api-docs:
     groups:
       enabled: true
-
----
-spring:
-  config:
-    activate:
-      on-profile:
-        - postgres_live
-  datasource:
-    url: jdbc:postgresql://localhost:5432/amigoscode
-    username: amigoscode
-    password: password
 ---
 spring:
   config:
