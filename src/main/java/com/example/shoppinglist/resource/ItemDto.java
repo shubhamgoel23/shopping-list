@@ -22,10 +22,12 @@ public record ItemDto(
                 ResponseView.ShoppingListItem.class})
         @Min(value = 0, groups = {RequestView.ShoppingListAddItem.class,
                 RequestView.ShoppingListUpdateItem.class})
-        Integer quantity
+        Integer quantity,
+
+        Long version
         // @formatter:on
 ) {
     public ItemDto() {
-        this(null, 0);
+        this(null, 0, 0L);
     }
 }

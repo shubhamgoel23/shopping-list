@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.WebRequest;
 
 import java.util.Map;
 
@@ -26,6 +27,7 @@ import java.util.Map;
 public class ShoppingListResource {
 
     private final ShoppingListService shoppingListService;
+    private final ShoppingListVersionService shoppingListVersionService;
 
     @Operation(summary = "Create shopping list", description = "Create shopping list", tags = {"shopping list"})
     @PostMapping("/shopping-list")
@@ -49,9 +51,16 @@ public class ShoppingListResource {
     @Operation(summary = "Get shopping list by id", description = "Get shopping list by id", tags = {"shopping list"})
     @GetMapping("/shopping-list/{id}")
     @JsonView({ResponseView.ShoppingListDetailed.class})
-    public ResponseEntity<Response<ShoppingListDto>> getShoppingListById(@PathVariable String id) {
-        return ResponseBuilder.build(shoppingListService.getShoppingListById(id), HttpStatus.OK,
-                "shopping list received");
+    public ResponseEntity<Response<ShoppingListDto>> getShoppingListById(@PathVariable String id, WebRequest webRequest) {
+
+        String version = shoppingListVersionService.shoppingListVerion(id).orElse(null);
+
+        if (webRequest.checkNotModified(version))
+            return null;
+
+        var res = shoppingListService.getShoppingListById(id);
+        return ResponseBuilder.build(res, HttpStatus.OK,
+                "shopping list received", version);
     }
 
     @Operation(summary = "update shopping list", description = "update shopping list", tags = {"shopping list"})
@@ -84,9 +93,16 @@ public class ShoppingListResource {
     @JsonView({ResponseView.ShoppingListItem.class})
     public ResponseEntity<Response<CustomPage<ItemDto>>> getShoppingListItems(@PathVariable String id,
                                                                               @RequestParam(defaultValue = "0", required = false) int page,
-                                                                              @RequestParam(defaultValue = "10", required = false) int size) {
+                                                                              @RequestParam(defaultValue = "10", required = false) int size,
+                                                                              WebRequest webRequest) {
+
+        String version = shoppingListVersionService.shoppingListVerion(id).orElse(null);
+
+        if (webRequest.checkNotModified(version))
+            return null;
+
         return ResponseBuilder.build(shoppingListService.getShoppingListItems(id, page, size), HttpStatus.OK,
-                "shopping list items received");
+                "shopping list items received", version);
     }
 
     @Operation(summary = "Get shopping list product by id", description = "Get shopping list product by id", tags = {"shopping list"})

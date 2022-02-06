@@ -19,13 +19,15 @@ public record ShoppingListDto(
 
         @JsonView({RequestView.ShoppingListCreate.class, ResponseView.ShoppingListBasic.class})
 //        @NotBlank(groups = {RequestView.ShoppingListCreate.class})
-        ShoppingListType type
+        ShoppingListType type,
+
+        Long version
 
 //        @JsonView({ ResponseView.ShoppingListDetailed.class })
 //        Map<String,ItemDto> shoppingListItemMap
         // @formatter:on
 ) {
     public ShoppingListDto() {
-        this(null, null, null);
+        this(null, null, null, 0L);
     }
 }

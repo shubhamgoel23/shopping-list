@@ -8,10 +8,7 @@ import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.hibernate.validator.internal.engine.path.PathImpl;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.lang.Nullable;
 import org.springframework.util.ObjectUtils;
@@ -31,6 +28,7 @@ import javax.validation.ConstraintViolationException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import static com.example.shoppinglist.util.HelperClass.*;
@@ -101,7 +99,18 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 ? ResponseBuilder.build(status, msg, reason)
                 : body;
 
-        return new ResponseEntity<>(body, headers, status);
+        return ResponseEntity
+                .status(status)
+                .contentType(MediaType.APPLICATION_PROBLEM_JSON)
+//                .headers(headers)
+                .cacheControl(CacheControl
+                        .maxAge(1, TimeUnit.MINUTES)
+                        .mustRevalidate()
+                        .cachePrivate()
+                        .noTransform()
+                        .staleIfError(1, TimeUnit.MINUTES)
+                        .staleWhileRevalidate(1, TimeUnit.MINUTES))
+                .body(body);
     }
 
     /**
