@@ -11,12 +11,12 @@
     </parent>
     <groupId>com.example</groupId>
     <artifactId>shoppinglist</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>${version.number}</version>
     <name>shoppinglist</name>
     <description>Demo project for ShoppingList</description>
     <properties>
         <!--suppress UnresolvedMavenProperty -->
-        <version.number>${project.activeProfiles[0].id}.${git.commit.id.abbrev}</version.number>
+        <version.number>${project.activeProfiles[0].id}</version.number>
         <!--<version.number>${git.branch}.${git.commit.id.abbrev}</version.number>-->
         <h2.enable>false</h2.enable>
         <profile.db.test>h2</profile.db.test>
