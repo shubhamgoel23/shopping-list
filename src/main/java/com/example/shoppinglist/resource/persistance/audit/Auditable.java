@@ -1,9 +1,11 @@
 package com.example.shoppinglist.resource.persistance.audit;
 
-import com.example.shoppinglist.resource.context.TenantContext;
 import com.example.shoppinglist.resource.persistance.listener.LifecycleListener;
+import com.example.shoppinglist.resource.persistance.listener.TenantGenerator;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.GenerationTime;
+import org.hibernate.annotations.GeneratorType;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -39,11 +41,13 @@ public abstract class Auditable {
     private String modifiedBy;
 
     @Column(name = "tenantId", nullable = false, updatable = false, length = 36)
+    @GeneratorType(type = TenantGenerator.class,
+    when = GenerationTime.INSERT)
     private String tenantId;
 
-    @PrePersist
-    private void setTenantId() {
-        this.tenantId = TenantContext.getTenantId();
-    }
+//    @PrePersist
+//    private void setTenantId() {
+//        this.tenantId = TenantContext.getTenantId();
+//    }
 
 }

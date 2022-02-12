@@ -28,6 +28,9 @@ spring:
     password: ${DB_PASSWORD:password}
     hikari:
       auto-commit: false
+      minimum-idle: 0
+      maximum-pool-size: 100
+      max-lifetime: 900000
   h2:
     console:
       enabled: @h2.enable@
@@ -43,6 +46,7 @@ spring:
     hibernate:
       ddl-auto: create-drop
     properties:
+      javax.persistence.query.timeout: 60000 #ms
       hibernate:
         generate_statistics: false
         format_sql: true
@@ -50,11 +54,16 @@ spring:
         jdbc:
           batch_size: ${app.datasource.batch_size}
           time_zone: ${app.default.timezone}
+          batch_versioned_data: true
         order:
           inserts: true
           updates: true
         connection.provider_disables_autocommit: true
         id.optimizer.pooled.preferred: pooled-lo
+        query:
+          in_clause_parameter_padding: true
+          fail_on_pagination_over_collection_fetch: true
+          plan_cache_max_size: 4096
   application:
     name: shoppinglist
   jackson: #these properties are overridden in case we configure @EnableWebMvc,in that case we need to implement custom MappingJackson2HttpMessageConverter
@@ -79,7 +88,7 @@ server:
     enabled: true
     mime-types: application/json
     min-response-size: 2KB
-
+  use-forward-headers: true
 management:
   endpoint:
     health:
