@@ -44,7 +44,10 @@ public class HelperClass {
     public static final Predicate<String> isStringWithoutSpecialCharacters = source -> CharMatcher
             // .anyOf("[$&+,:;=\\\\?@#|/'<>.^*()%!-]")
             .anyOf("'\"`;*%_=&\\\\|*?~<>^()[]{}$\\n\\r").matchesNoneOf(source);
-    public static final Supplier<String> uuid = () -> UUID.randomUUID().toString();
+//    public static final Supplier<String> uuid = () -> UUID.randomUUID().toString();
+
+    public static final Supplier<String> uuid = () -> SecureRandomString.generate();
+
     public static final Function<Object, String> cleanString = source -> {
         if (ObjectUtils.isEmpty(source))
             return null;
