@@ -2,7 +2,7 @@ logging:
   level:
     root: info
     web: trace
-    sql: info
+    sql: debug
     feign: info
     com.zaxxer.hikari: info
     com.zaxxer.hikari.HikariConfig: info
@@ -11,7 +11,6 @@ logging:
         type: info
   pattern:
     dateformat: yyyy-MM-dd HH:mm:ss.SSS,${app.default.timezone}
-
 spring:
   profiles:
     active:
@@ -78,6 +77,8 @@ spring:
   web:
     resources:
       add-mappings: false
+  transaction:
+    default-timeout: 60
 server:
   shutdown: graceful
   port: 8080
