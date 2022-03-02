@@ -40,7 +40,7 @@
             **/example/shoppinglist/exception/**,
             **/example/shoppinglist/util/**
         </sonar.coverage.exclusions>
-        <formatter-maven-plugin.version>2.17.1</formatter-maven-plugin.version>
+        <formatter-maven-plugin.version>2.18.0</formatter-maven-plugin.version>
         <dependency-check-maven.version>7.0.0</dependency-check-maven.version>
         <!--vulnerable dependency  -->
         <h2.version>2.1.210</h2.version>
