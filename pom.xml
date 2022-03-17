@@ -45,7 +45,7 @@
         <!--vulnerable dependency  -->
         <h2.version>2.1.210</h2.version>
         <liquibase.version>4.8.0</liquibase.version>
-        <envers.version>5.6.5.Final</envers.version>
+        <envers.version>5.6.7.Final</envers.version>
     </properties>
     <dependencies>
         <dependency>
