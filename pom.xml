@@ -27,7 +27,7 @@
         <mapstruct.version>1.4.2.Final</mapstruct.version>
         <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
         <owasp-html-sanitizer.version>20211018.2</owasp-html-sanitizer.version>
-        <jjwt.version>0.11.2</jjwt.version>
+        <jjwt.version>0.11.3</jjwt.version>
         <jacoco.version>0.8.8</jacoco.version>
         <hibernate-jpamodelgen.version>5.6.8.Final</hibernate-jpamodelgen.version>
         <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
