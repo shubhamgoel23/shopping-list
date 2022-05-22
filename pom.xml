@@ -313,7 +313,7 @@
                 <configuration>
                     <skipProvidedScope>true</skipProvidedScope>
                     <skipRuntimeScope>true</skipRuntimeScope>
-                    <failBuildOnCVSS>8</failBuildOnCVSS>
+                    <failBuildOnCVSS>10</failBuildOnCVSS>
                 </configuration>
                 <executions>
                     <execution>
