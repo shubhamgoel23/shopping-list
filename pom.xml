@@ -41,7 +41,7 @@
             **/example/shoppinglist/util/**
         </sonar.coverage.exclusions>
         <formatter-maven-plugin.version>2.19.0</formatter-maven-plugin.version>
-        <dependency-check-maven.version>7.1.0</dependency-check-maven.version>
+        <dependency-check-maven.version>7.1.1</dependency-check-maven.version>
         <!--vulnerable dependency  -->
         <h2.version>2.1.210</h2.version>
         <liquibase.version>4.8.0</liquibase.version>
