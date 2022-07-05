@@ -38,7 +38,7 @@ public class Response<T> {
 
     protected String developerMessage;
 
-    protected T content;
+    protected T data;
 
     protected Collection<ValidationError> errors;
 }

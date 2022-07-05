@@ -1,26 +1,31 @@
 package com.example.shoppinglist.config;
 
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.info.Info;
+import io.swagger.v3.oas.annotations.servers.Server;
 import org.springdoc.core.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 @Component
+@OpenAPIDefinition(info = @Info(title = "Shopping List Service", version = "v1"),
+        servers = { @Server(url = "/", description = "Default Server URL")})
 public class OpenApiConfig {
 
     @Bean
     GroupedOpenApi userApis() { // group all APIs with `user` in the path
         return GroupedOpenApi.builder()
-                .group("user")
+                .group("customer")
                 .pathsToMatch("/api/v1/shopping-list/**")
-                .addOpenApiCustomiser(new HeaderFilter("X-Tenant"))
                 .addOperationCustomizer(new HeaderConfig())
                 .build();
     }
 
-    @Bean
+    //    @Bean
     GroupedOpenApi testApis() { // group all APIs with `user` in the path
         return GroupedOpenApi.builder()
                 .group("test")
+                .addOpenApiCustomiser(new HeaderFilter("X-Tenant"))
                 .pathsToMatch("/api/v2/shopping-list/**")
                 .build();
     }

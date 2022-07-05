@@ -5,16 +5,16 @@ import lombok.experimental.UtilityClass;
 import org.owasp.html.PolicyFactory;
 import org.owasp.html.Sanitizers;
 import org.slf4j.MDC;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.util.HtmlUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Collection;
 import java.util.Optional;
-import java.util.function.LongSupplier;
-import java.util.function.Predicate;
-import java.util.function.Supplier;
-import java.util.function.UnaryOperator;
+import java.util.UUID;
+import java.util.function.*;
 import java.util.stream.Stream;
 
 @UtilityClass
@@ -44,6 +44,15 @@ public class HelperClass {
     public static final Predicate<String> isStringWithoutSpecialCharacters = source -> CharMatcher
             // .anyOf("[$&+,:;=\\\\?@#|/'<>.^*()%!-]")
             .anyOf("'\"`;*%_=&\\\\|*?~<>^()[]{}$\\n\\r").matchesNoneOf(source);
+//    public static final Supplier<String> uuid = () -> UUID.randomUUID().toString();
+
+    public static final Supplier<String> uuid = () -> SecureRandomString.generate();
+
+    public static final Function<Object, String> cleanString = source -> {
+        if (ObjectUtils.isEmpty(source))
+            return null;
+        return HtmlUtils.htmlEscape(source.toString()).replace('\t', '-').replace('\n', '-').replace('\r', '-');
+    };
 
     public static final <T> Stream<T> collectionAsStream(Collection<T> collection) {
         return collection == null ? Stream.empty() : collection.stream();

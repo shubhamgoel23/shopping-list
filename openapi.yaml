@@ -1,0 +1,1039 @@
+openapi: 3.0.1
+info:
+  title: Shopping List Service
+  version: v1
+servers:
+  - url: /
+    description: Default Server URL
+tags:
+  - name: Shopping List APIs
+paths:
+  /api/v1/shopping-list/{id}:
+    get:
+      tags:
+        - Shopping List APIs
+      summary: Get shopping list by id
+      description: Get shopping list by id
+      operationId: getShoppingListById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: X-Tenant
+          in: header
+          required: true
+          schema:
+            maxLength: 36
+            type: string
+        - name: X-Customer
+          in: header
+          required: true
+          schema:
+            maxLength: 36
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseShoppingListDto_ShoppingListDetailed'
+    put:
+      tags:
+        - Shopping List APIs
+      summary: update shopping list
+      description: update shopping list
+      operationId: updateShoppingListById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: X-Tenant
+          in: header
+          required: true
+          schema:
+            maxLength: 36
+            type: string
+        - name: X-Customer
+          in: header
+          required: true
+          schema:
+            maxLength: 36
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ShoppingListDto_ShoppingListUpdate'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseVoid'
+    delete:
+      tags:
+        - Shopping List APIs
+      summary: delete shopping list
+      description: delete shopping list
+      operationId: deleteShoppingListById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: X-Tenant
+          in: header
+          required: true
+          schema:
+            maxLength: 36
+            type: string
+        - name: X-Customer
+          in: header
+          required: true
+          schema:
+            maxLength: 36
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseVoid'
+  /api/v1/shopping-list/{id}/item:
+    get:
+      tags:
+        - Shopping List APIs
+      summary: Get all shopping list products
+      description: Get all shopping list products
+      operationId: getShoppingListItems
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+            default: 0
+        - name: size
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+            default: 10
+        - name: X-Tenant
+          in: header
+          required: true
+          schema:
+            maxLength: 36
+            type: string
+        - name: X-Customer
+          in: header
+          required: true
+          schema:
+            maxLength: 36
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseCustomPageItemDto_ShoppingListItem'
+    put:
+      tags:
+        - Shopping List APIs
+      summary: add/update shopping list products
+      description: add/update shopping list products
+      operationId: addItemInShoppingList
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: X-Tenant
+          in: header
+          required: true
+          schema:
+            maxLength: 36
+            type: string
+        - name: X-Customer
+          in: header
+          required: true
+          schema:
+            maxLength: 36
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties:
+                $ref: '#/components/schemas/ItemDto_ShoppingListAddItem'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseVoid'
+  /api/v1/shopping-list/{id}/item/{productId}:
+    get:
+      tags:
+        - Shopping List APIs
+      summary: Get shopping list product by id
+      description: Get shopping list product by id
+      operationId: getShoppingListItemByProductId
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: productId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: X-Tenant
+          in: header
+          required: true
+          schema:
+            maxLength: 36
+            type: string
+        - name: X-Customer
+          in: header
+          required: true
+          schema:
+            maxLength: 36
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseItemDto_ShoppingListItem'
+    put:
+      tags:
+        - Shopping List APIs
+      summary: update shopping list
+      description: update shopping list
+      operationId: updateShoppingListItemsByProductId
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: productId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: X-Tenant
+          in: header
+          required: true
+          schema:
+            maxLength: 36
+            type: string
+        - name: X-Customer
+          in: header
+          required: true
+          schema:
+            maxLength: 36
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ItemDto_ShoppingListUpdateItem'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseVoid'
+  /api/v1/shopping-list:
+    get:
+      tags:
+        - Shopping List APIs
+      summary: Get all shopping list
+      description: Get all shopping list
+      operationId: getShoppingList
+      parameters:
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+            default: 0
+        - name: size
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+            default: 0
+        - name: productId
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: X-Tenant
+          in: header
+          required: true
+          schema:
+            maxLength: 36
+            type: string
+        - name: X-Customer
+          in: header
+          required: true
+          schema:
+            maxLength: 36
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseCustomPageShoppingListDto_ShoppingListBasic'
+    post:
+      tags:
+        - Shopping List APIs
+      summary: Create shopping list
+      description: Create shopping list
+      operationId: createShoppingList
+      parameters:
+        - name: X-Tenant
+          in: header
+          required: true
+          schema:
+            maxLength: 36
+            type: string
+        - name: X-Customer
+          in: header
+          required: true
+          schema:
+            maxLength: 36
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ShoppingListDto_ShoppingListCreate'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseVoid'
+components:
+  schemas:
+    ShoppingListDto_ShoppingListUpdate:
+      required:
+        - name
+      type: object
+      properties:
+        name:
+          maxLength: 10
+          minLength: 0
+          type: string
+        version:
+          type: integer
+          format: int64
+    ResponseVoid:
+      type: object
+      properties:
+        timeStamp:
+          type: integer
+          format: int64
+        traceId:
+          type: string
+        method:
+          type: string
+        path:
+          type: string
+        status:
+          type: string
+          enum:
+            - 100 CONTINUE
+            - 101 SWITCHING_PROTOCOLS
+            - 102 PROCESSING
+            - 103 CHECKPOINT
+            - 200 OK
+            - 201 CREATED
+            - 202 ACCEPTED
+            - 203 NON_AUTHORITATIVE_INFORMATION
+            - 204 NO_CONTENT
+            - 205 RESET_CONTENT
+            - 206 PARTIAL_CONTENT
+            - 207 MULTI_STATUS
+            - 208 ALREADY_REPORTED
+            - 226 IM_USED
+            - 300 MULTIPLE_CHOICES
+            - 301 MOVED_PERMANENTLY
+            - 302 FOUND
+            - 302 MOVED_TEMPORARILY
+            - 303 SEE_OTHER
+            - 304 NOT_MODIFIED
+            - 305 USE_PROXY
+            - 307 TEMPORARY_REDIRECT
+            - 308 PERMANENT_REDIRECT
+            - 400 BAD_REQUEST
+            - 401 UNAUTHORIZED
+            - 402 PAYMENT_REQUIRED
+            - 403 FORBIDDEN
+            - 404 NOT_FOUND
+            - 405 METHOD_NOT_ALLOWED
+            - 406 NOT_ACCEPTABLE
+            - 407 PROXY_AUTHENTICATION_REQUIRED
+            - 408 REQUEST_TIMEOUT
+            - 409 CONFLICT
+            - 410 GONE
+            - 411 LENGTH_REQUIRED
+            - 412 PRECONDITION_FAILED
+            - 413 PAYLOAD_TOO_LARGE
+            - 413 REQUEST_ENTITY_TOO_LARGE
+            - 414 URI_TOO_LONG
+            - 414 REQUEST_URI_TOO_LONG
+            - 415 UNSUPPORTED_MEDIA_TYPE
+            - 416 REQUESTED_RANGE_NOT_SATISFIABLE
+            - 417 EXPECTATION_FAILED
+            - 418 I_AM_A_TEAPOT
+            - 419 INSUFFICIENT_SPACE_ON_RESOURCE
+            - 420 METHOD_FAILURE
+            - 421 DESTINATION_LOCKED
+            - 422 UNPROCESSABLE_ENTITY
+            - 423 LOCKED
+            - 424 FAILED_DEPENDENCY
+            - 425 TOO_EARLY
+            - 426 UPGRADE_REQUIRED
+            - 428 PRECONDITION_REQUIRED
+            - 429 TOO_MANY_REQUESTS
+            - 431 REQUEST_HEADER_FIELDS_TOO_LARGE
+            - 451 UNAVAILABLE_FOR_LEGAL_REASONS
+            - 500 INTERNAL_SERVER_ERROR
+            - 501 NOT_IMPLEMENTED
+            - 502 BAD_GATEWAY
+            - 503 SERVICE_UNAVAILABLE
+            - 504 GATEWAY_TIMEOUT
+            - 505 HTTP_VERSION_NOT_SUPPORTED
+            - 506 VARIANT_ALSO_NEGOTIATES
+            - 507 INSUFFICIENT_STORAGE
+            - 508 LOOP_DETECTED
+            - 509 BANDWIDTH_LIMIT_EXCEEDED
+            - 510 NOT_EXTENDED
+            - 511 NETWORK_AUTHENTICATION_REQUIRED
+        statusCode:
+          type: integer
+          format: int32
+        reason:
+          type: string
+        message:
+          type: string
+        developerMessage:
+          type: string
+        data:
+          type: object
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/ValidationError'
+    ValidationError:
+      type: object
+      properties:
+        object:
+          type: string
+        field:
+          type: string
+        rejectedValue:
+          type: object
+        message:
+          type: string
+    ItemDto_ShoppingListAddItem:
+      required:
+        - productId
+      type: object
+      properties:
+        productId:
+          maxLength: 36
+          minLength: 0
+          type: string
+        quantity:
+          minimum: 0
+          type: integer
+          format: int32
+        version:
+          type: integer
+          format: int64
+    ItemDto_ShoppingListUpdateItem:
+      type: object
+      properties:
+        quantity:
+          minimum: 0
+          type: integer
+          format: int32
+        version:
+          type: integer
+          format: int64
+    ShoppingListDto_ShoppingListCreate:
+      required:
+        - name
+      type: object
+      properties:
+        name:
+          maxLength: 10
+          minLength: 0
+          type: string
+        type:
+          type: string
+          enum:
+            - WISH_LIST
+            - SAVE_FOR_LATER
+        version:
+          type: integer
+          format: int64
+    CustomPageShoppingListDto_ShoppingListBasic:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/ShoppingListDto_ShoppingListBasic'
+        pageable:
+          $ref: '#/components/schemas/CustomPageable_ShoppingListBasic'
+    CustomPageable_ShoppingListBasic:
+      type: object
+      properties:
+        pageNumber:
+          type: integer
+          format: int32
+        pageSize:
+          type: integer
+          format: int32
+        totalElements:
+          type: integer
+          format: int64
+    ResponseCustomPageShoppingListDto_ShoppingListBasic:
+      type: object
+      properties:
+        timeStamp:
+          type: integer
+          format: int64
+        traceId:
+          type: string
+        method:
+          type: string
+        path:
+          type: string
+        status:
+          type: string
+          enum:
+            - 100 CONTINUE
+            - 101 SWITCHING_PROTOCOLS
+            - 102 PROCESSING
+            - 103 CHECKPOINT
+            - 200 OK
+            - 201 CREATED
+            - 202 ACCEPTED
+            - 203 NON_AUTHORITATIVE_INFORMATION
+            - 204 NO_CONTENT
+            - 205 RESET_CONTENT
+            - 206 PARTIAL_CONTENT
+            - 207 MULTI_STATUS
+            - 208 ALREADY_REPORTED
+            - 226 IM_USED
+            - 300 MULTIPLE_CHOICES
+            - 301 MOVED_PERMANENTLY
+            - 302 FOUND
+            - 302 MOVED_TEMPORARILY
+            - 303 SEE_OTHER
+            - 304 NOT_MODIFIED
+            - 305 USE_PROXY
+            - 307 TEMPORARY_REDIRECT
+            - 308 PERMANENT_REDIRECT
+            - 400 BAD_REQUEST
+            - 401 UNAUTHORIZED
+            - 402 PAYMENT_REQUIRED
+            - 403 FORBIDDEN
+            - 404 NOT_FOUND
+            - 405 METHOD_NOT_ALLOWED
+            - 406 NOT_ACCEPTABLE
+            - 407 PROXY_AUTHENTICATION_REQUIRED
+            - 408 REQUEST_TIMEOUT
+            - 409 CONFLICT
+            - 410 GONE
+            - 411 LENGTH_REQUIRED
+            - 412 PRECONDITION_FAILED
+            - 413 PAYLOAD_TOO_LARGE
+            - 413 REQUEST_ENTITY_TOO_LARGE
+            - 414 URI_TOO_LONG
+            - 414 REQUEST_URI_TOO_LONG
+            - 415 UNSUPPORTED_MEDIA_TYPE
+            - 416 REQUESTED_RANGE_NOT_SATISFIABLE
+            - 417 EXPECTATION_FAILED
+            - 418 I_AM_A_TEAPOT
+            - 419 INSUFFICIENT_SPACE_ON_RESOURCE
+            - 420 METHOD_FAILURE
+            - 421 DESTINATION_LOCKED
+            - 422 UNPROCESSABLE_ENTITY
+            - 423 LOCKED
+            - 424 FAILED_DEPENDENCY
+            - 425 TOO_EARLY
+            - 426 UPGRADE_REQUIRED
+            - 428 PRECONDITION_REQUIRED
+            - 429 TOO_MANY_REQUESTS
+            - 431 REQUEST_HEADER_FIELDS_TOO_LARGE
+            - 451 UNAVAILABLE_FOR_LEGAL_REASONS
+            - 500 INTERNAL_SERVER_ERROR
+            - 501 NOT_IMPLEMENTED
+            - 502 BAD_GATEWAY
+            - 503 SERVICE_UNAVAILABLE
+            - 504 GATEWAY_TIMEOUT
+            - 505 HTTP_VERSION_NOT_SUPPORTED
+            - 506 VARIANT_ALSO_NEGOTIATES
+            - 507 INSUFFICIENT_STORAGE
+            - 508 LOOP_DETECTED
+            - 509 BANDWIDTH_LIMIT_EXCEEDED
+            - 510 NOT_EXTENDED
+            - 511 NETWORK_AUTHENTICATION_REQUIRED
+        statusCode:
+          type: integer
+          format: int32
+        reason:
+          type: string
+        message:
+          type: string
+        developerMessage:
+          type: string
+        data:
+          $ref: '#/components/schemas/CustomPageShoppingListDto_ShoppingListBasic'
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/ValidationError_ShoppingListBasic'
+    ShoppingListDto_ShoppingListBasic:
+      required:
+        - name
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          maxLength: 10
+          minLength: 0
+          type: string
+        type:
+          type: string
+          enum:
+            - WISH_LIST
+            - SAVE_FOR_LATER
+        version:
+          type: integer
+          format: int64
+    ValidationError_ShoppingListBasic:
+      type: object
+      properties:
+        object:
+          type: string
+        field:
+          type: string
+        rejectedValue:
+          type: object
+        message:
+          type: string
+    ResponseShoppingListDto_ShoppingListDetailed:
+      type: object
+      properties:
+        timeStamp:
+          type: integer
+          format: int64
+        traceId:
+          type: string
+        method:
+          type: string
+        path:
+          type: string
+        status:
+          type: string
+          enum:
+            - 100 CONTINUE
+            - 101 SWITCHING_PROTOCOLS
+            - 102 PROCESSING
+            - 103 CHECKPOINT
+            - 200 OK
+            - 201 CREATED
+            - 202 ACCEPTED
+            - 203 NON_AUTHORITATIVE_INFORMATION
+            - 204 NO_CONTENT
+            - 205 RESET_CONTENT
+            - 206 PARTIAL_CONTENT
+            - 207 MULTI_STATUS
+            - 208 ALREADY_REPORTED
+            - 226 IM_USED
+            - 300 MULTIPLE_CHOICES
+            - 301 MOVED_PERMANENTLY
+            - 302 FOUND
+            - 302 MOVED_TEMPORARILY
+            - 303 SEE_OTHER
+            - 304 NOT_MODIFIED
+            - 305 USE_PROXY
+            - 307 TEMPORARY_REDIRECT
+            - 308 PERMANENT_REDIRECT
+            - 400 BAD_REQUEST
+            - 401 UNAUTHORIZED
+            - 402 PAYMENT_REQUIRED
+            - 403 FORBIDDEN
+            - 404 NOT_FOUND
+            - 405 METHOD_NOT_ALLOWED
+            - 406 NOT_ACCEPTABLE
+            - 407 PROXY_AUTHENTICATION_REQUIRED
+            - 408 REQUEST_TIMEOUT
+            - 409 CONFLICT
+            - 410 GONE
+            - 411 LENGTH_REQUIRED
+            - 412 PRECONDITION_FAILED
+            - 413 PAYLOAD_TOO_LARGE
+            - 413 REQUEST_ENTITY_TOO_LARGE
+            - 414 URI_TOO_LONG
+            - 414 REQUEST_URI_TOO_LONG
+            - 415 UNSUPPORTED_MEDIA_TYPE
+            - 416 REQUESTED_RANGE_NOT_SATISFIABLE
+            - 417 EXPECTATION_FAILED
+            - 418 I_AM_A_TEAPOT
+            - 419 INSUFFICIENT_SPACE_ON_RESOURCE
+            - 420 METHOD_FAILURE
+            - 421 DESTINATION_LOCKED
+            - 422 UNPROCESSABLE_ENTITY
+            - 423 LOCKED
+            - 424 FAILED_DEPENDENCY
+            - 425 TOO_EARLY
+            - 426 UPGRADE_REQUIRED
+            - 428 PRECONDITION_REQUIRED
+            - 429 TOO_MANY_REQUESTS
+            - 431 REQUEST_HEADER_FIELDS_TOO_LARGE
+            - 451 UNAVAILABLE_FOR_LEGAL_REASONS
+            - 500 INTERNAL_SERVER_ERROR
+            - 501 NOT_IMPLEMENTED
+            - 502 BAD_GATEWAY
+            - 503 SERVICE_UNAVAILABLE
+            - 504 GATEWAY_TIMEOUT
+            - 505 HTTP_VERSION_NOT_SUPPORTED
+            - 506 VARIANT_ALSO_NEGOTIATES
+            - 507 INSUFFICIENT_STORAGE
+            - 508 LOOP_DETECTED
+            - 509 BANDWIDTH_LIMIT_EXCEEDED
+            - 510 NOT_EXTENDED
+            - 511 NETWORK_AUTHENTICATION_REQUIRED
+        statusCode:
+          type: integer
+          format: int32
+        reason:
+          type: string
+        message:
+          type: string
+        developerMessage:
+          type: string
+        data:
+          $ref: '#/components/schemas/ShoppingListDto_ShoppingListDetailed'
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/ValidationError_ShoppingListDetailed'
+    ShoppingListDto_ShoppingListDetailed:
+      required:
+        - name
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          maxLength: 10
+          minLength: 0
+          type: string
+        type:
+          type: string
+          enum:
+            - WISH_LIST
+            - SAVE_FOR_LATER
+        version:
+          type: integer
+          format: int64
+    ValidationError_ShoppingListDetailed:
+      type: object
+      properties:
+        object:
+          type: string
+        field:
+          type: string
+        rejectedValue:
+          type: object
+        message:
+          type: string
+    CustomPageItemDto_ShoppingListItem:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/ItemDto_ShoppingListItem'
+        pageable:
+          $ref: '#/components/schemas/CustomPageable_ShoppingListItem'
+    CustomPageable_ShoppingListItem:
+      type: object
+      properties:
+        pageNumber:
+          type: integer
+          format: int32
+        pageSize:
+          type: integer
+          format: int32
+        totalElements:
+          type: integer
+          format: int64
+    ItemDto_ShoppingListItem:
+      required:
+        - productId
+      type: object
+      properties:
+        productId:
+          maxLength: 36
+          minLength: 0
+          type: string
+        quantity:
+          minimum: 0
+          type: integer
+          format: int32
+        version:
+          type: integer
+          format: int64
+    ResponseCustomPageItemDto_ShoppingListItem:
+      type: object
+      properties:
+        timeStamp:
+          type: integer
+          format: int64
+        traceId:
+          type: string
+        method:
+          type: string
+        path:
+          type: string
+        status:
+          type: string
+          enum:
+            - 100 CONTINUE
+            - 101 SWITCHING_PROTOCOLS
+            - 102 PROCESSING
+            - 103 CHECKPOINT
+            - 200 OK
+            - 201 CREATED
+            - 202 ACCEPTED
+            - 203 NON_AUTHORITATIVE_INFORMATION
+            - 204 NO_CONTENT
+            - 205 RESET_CONTENT
+            - 206 PARTIAL_CONTENT
+            - 207 MULTI_STATUS
+            - 208 ALREADY_REPORTED
+            - 226 IM_USED
+            - 300 MULTIPLE_CHOICES
+            - 301 MOVED_PERMANENTLY
+            - 302 FOUND
+            - 302 MOVED_TEMPORARILY
+            - 303 SEE_OTHER
+            - 304 NOT_MODIFIED
+            - 305 USE_PROXY
+            - 307 TEMPORARY_REDIRECT
+            - 308 PERMANENT_REDIRECT
+            - 400 BAD_REQUEST
+            - 401 UNAUTHORIZED
+            - 402 PAYMENT_REQUIRED
+            - 403 FORBIDDEN
+            - 404 NOT_FOUND
+            - 405 METHOD_NOT_ALLOWED
+            - 406 NOT_ACCEPTABLE
+            - 407 PROXY_AUTHENTICATION_REQUIRED
+            - 408 REQUEST_TIMEOUT
+            - 409 CONFLICT
+            - 410 GONE
+            - 411 LENGTH_REQUIRED
+            - 412 PRECONDITION_FAILED
+            - 413 PAYLOAD_TOO_LARGE
+            - 413 REQUEST_ENTITY_TOO_LARGE
+            - 414 URI_TOO_LONG
+            - 414 REQUEST_URI_TOO_LONG
+            - 415 UNSUPPORTED_MEDIA_TYPE
+            - 416 REQUESTED_RANGE_NOT_SATISFIABLE
+            - 417 EXPECTATION_FAILED
+            - 418 I_AM_A_TEAPOT
+            - 419 INSUFFICIENT_SPACE_ON_RESOURCE
+            - 420 METHOD_FAILURE
+            - 421 DESTINATION_LOCKED
+            - 422 UNPROCESSABLE_ENTITY
+            - 423 LOCKED
+            - 424 FAILED_DEPENDENCY
+            - 425 TOO_EARLY
+            - 426 UPGRADE_REQUIRED
+            - 428 PRECONDITION_REQUIRED
+            - 429 TOO_MANY_REQUESTS
+            - 431 REQUEST_HEADER_FIELDS_TOO_LARGE
+            - 451 UNAVAILABLE_FOR_LEGAL_REASONS
+            - 500 INTERNAL_SERVER_ERROR
+            - 501 NOT_IMPLEMENTED
+            - 502 BAD_GATEWAY
+            - 503 SERVICE_UNAVAILABLE
+            - 504 GATEWAY_TIMEOUT
+            - 505 HTTP_VERSION_NOT_SUPPORTED
+            - 506 VARIANT_ALSO_NEGOTIATES
+            - 507 INSUFFICIENT_STORAGE
+            - 508 LOOP_DETECTED
+            - 509 BANDWIDTH_LIMIT_EXCEEDED
+            - 510 NOT_EXTENDED
+            - 511 NETWORK_AUTHENTICATION_REQUIRED
+        statusCode:
+          type: integer
+          format: int32
+        reason:
+          type: string
+        message:
+          type: string
+        developerMessage:
+          type: string
+        data:
+          $ref: '#/components/schemas/CustomPageItemDto_ShoppingListItem'
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/ValidationError_ShoppingListItem'
+    ValidationError_ShoppingListItem:
+      type: object
+      properties:
+        object:
+          type: string
+        field:
+          type: string
+        rejectedValue:
+          type: object
+        message:
+          type: string
+    ResponseItemDto_ShoppingListItem:
+      type: object
+      properties:
+        timeStamp:
+          type: integer
+          format: int64
+        traceId:
+          type: string
+        method:
+          type: string
+        path:
+          type: string
+        status:
+          type: string
+          enum:
+            - 100 CONTINUE
+            - 101 SWITCHING_PROTOCOLS
+            - 102 PROCESSING
+            - 103 CHECKPOINT
+            - 200 OK
+            - 201 CREATED
+            - 202 ACCEPTED
+            - 203 NON_AUTHORITATIVE_INFORMATION
+            - 204 NO_CONTENT
+            - 205 RESET_CONTENT
+            - 206 PARTIAL_CONTENT
+            - 207 MULTI_STATUS
+            - 208 ALREADY_REPORTED
+            - 226 IM_USED
+            - 300 MULTIPLE_CHOICES
+            - 301 MOVED_PERMANENTLY
+            - 302 FOUND
+            - 302 MOVED_TEMPORARILY
+            - 303 SEE_OTHER
+            - 304 NOT_MODIFIED
+            - 305 USE_PROXY
+            - 307 TEMPORARY_REDIRECT
+            - 308 PERMANENT_REDIRECT
+            - 400 BAD_REQUEST
+            - 401 UNAUTHORIZED
+            - 402 PAYMENT_REQUIRED
+            - 403 FORBIDDEN
+            - 404 NOT_FOUND
+            - 405 METHOD_NOT_ALLOWED
+            - 406 NOT_ACCEPTABLE
+            - 407 PROXY_AUTHENTICATION_REQUIRED
+            - 408 REQUEST_TIMEOUT
+            - 409 CONFLICT
+            - 410 GONE
+            - 411 LENGTH_REQUIRED
+            - 412 PRECONDITION_FAILED
+            - 413 PAYLOAD_TOO_LARGE
+            - 413 REQUEST_ENTITY_TOO_LARGE
+            - 414 URI_TOO_LONG
+            - 414 REQUEST_URI_TOO_LONG
+            - 415 UNSUPPORTED_MEDIA_TYPE
+            - 416 REQUESTED_RANGE_NOT_SATISFIABLE
+            - 417 EXPECTATION_FAILED
+            - 418 I_AM_A_TEAPOT
+            - 419 INSUFFICIENT_SPACE_ON_RESOURCE
+            - 420 METHOD_FAILURE
+            - 421 DESTINATION_LOCKED
+            - 422 UNPROCESSABLE_ENTITY
+            - 423 LOCKED
+            - 424 FAILED_DEPENDENCY
+            - 425 TOO_EARLY
+            - 426 UPGRADE_REQUIRED
+            - 428 PRECONDITION_REQUIRED
+            - 429 TOO_MANY_REQUESTS
+            - 431 REQUEST_HEADER_FIELDS_TOO_LARGE
+            - 451 UNAVAILABLE_FOR_LEGAL_REASONS
+            - 500 INTERNAL_SERVER_ERROR
+            - 501 NOT_IMPLEMENTED
+            - 502 BAD_GATEWAY
+            - 503 SERVICE_UNAVAILABLE
+            - 504 GATEWAY_TIMEOUT
+            - 505 HTTP_VERSION_NOT_SUPPORTED
+            - 506 VARIANT_ALSO_NEGOTIATES
+            - 507 INSUFFICIENT_STORAGE
+            - 508 LOOP_DETECTED
+            - 509 BANDWIDTH_LIMIT_EXCEEDED
+            - 510 NOT_EXTENDED
+            - 511 NETWORK_AUTHENTICATION_REQUIRED
+        statusCode:
+          type: integer
+          format: int32
+        reason:
+          type: string
+        message:
+          type: string
+        developerMessage:
+          type: string
+        data:
+          $ref: '#/components/schemas/ItemDto_ShoppingListItem'
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/ValidationError_ShoppingListItem'

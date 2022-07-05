@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <databaseChangeLog
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
-                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.5.xsd"
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.7.xsd"
         objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
-    <changeSet id="1642234919562-1" author="shubham (generated)">
+    <changeSet id="1643464407232-1" author="shubham (generated)">
         <createSequence incrementBy="500" sequenceName="item_sequence" startValue="1"/>
     </changeSet>
-    <changeSet id="1642234919562-2" author="shubham (generated)">
+    <changeSet id="1643464407232-2" author="shubham (generated)">
         <createSequence incrementBy="500" sequenceName="list_sequence" startValue="1"/>
     </changeSet>
-    <changeSet id="1642234919562-3" author="shubham (generated)">
+    <changeSet id="1643464407232-3" author="shubham (generated)">
         <createTable tableName="item">
             <column name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_item"/>
@@ -23,7 +23,10 @@
             <column name="updated_on" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
-            <column name="product_id" type="VARCHAR(255)">
+            <column name="tenant_id" type="VARCHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="product_id" type="VARCHAR(36)">
                 <constraints nullable="false"/>
             </column>
             <column name="quantity" type="INT">
@@ -32,7 +35,7 @@
             <column name="shopping_list_id" type="BIGINT"/>
         </createTable>
     </changeSet>
-    <changeSet id="1642234919562-4" author="shubham (generated)">
+    <changeSet id="1643464407232-4" author="shubham (generated)">
         <createTable tableName="shopping_list">
             <column name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_shopping_list"/>
@@ -44,38 +47,52 @@
             <column name="updated_on" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
-            <column name="list_id" type="VARCHAR(255)">
+            <column name="tenant_id" type="VARCHAR(36)">
                 <constraints nullable="false"/>
             </column>
-            <column name="name" type="VARCHAR(255)">
+            <column name="list_id" type="VARCHAR(36)">
                 <constraints nullable="false"/>
             </column>
-            <column name="type" type="VARCHAR(255)">
+            <column name="name" type="VARCHAR(10)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="type" type="VARCHAR(5)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="customer_id" type="VARCHAR(36)">
                 <constraints nullable="false"/>
             </column>
         </createTable>
     </changeSet>
-    <changeSet id="1642234919562-5" author="shubham (generated)">
+    <changeSet id="1643464407232-5" author="shubham (generated)">
         <addUniqueConstraint columnNames="list_id" constraintName="uc_shopping_list_listid" tableName="shopping_list"/>
     </changeSet>
-    <changeSet id="1642234919562-7" author="shubham (generated)">
-        <createIndex indexName="in_name_n_type" tableName="shopping_list">
-            <column name="name"/>
-            <column name="type"/>
+    <changeSet id="1643464407232-6" author="shubham (generated)">
+        <createIndex indexName="in_customerId_n_tenantId" tableName="shopping_list">
+            <column name="customer_id"/>
+            <column name="tenant_id"/>
         </createIndex>
     </changeSet>
-    <changeSet id="1642234919562-8" author="shubham (generated)">
-        <createIndex indexName="uk_shoppingListId_N_productId_index" tableName="item">
+    <changeSet id="1643464407232-7" author="shubham (generated)">
+        <createIndex indexName="in_name_n_type_n_customerId_tenantId" tableName="shopping_list" unique="true">
+            <column name="name"/>
+            <column name="type"/>
+            <column name="customer_id"/>
+            <column name="tenant_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet id="1643464407232-9" author="shubham (generated)">
+        <createIndex indexName="in_shoppingListId_n_productId" tableName="item">
             <column name="shopping_list_id"/>
             <column name="product_id"/>
         </createIndex>
     </changeSet>
-    <changeSet id="1642234919562-9" author="shubham (generated)">
+    <changeSet id="1643464407232-10" author="shubham (generated)">
         <addForeignKeyConstraint baseColumnNames="shopping_list_id" baseTableName="item"
                                  constraintName="FK_ITEM_ON_SHOPPINGLISTID" referencedColumnNames="id"
                                  referencedTableName="shopping_list"/>
 
-        <createIndex indexName="fk_shopping_list_id_index" tableName="item">
+        <createIndex indexName="in_shoppingListId" tableName="item">
             <column name="shopping_list_id"/>
         </createIndex>
     </changeSet>

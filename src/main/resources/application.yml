@@ -1,32 +1,35 @@
 logging:
   level:
     root: info
-    web: info
+    web: trace
     sql: debug
     feign: info
-    com.zaxxer.hikari: trace
-    com.zaxxer.hikari.HikariConfig: DEBUG
+    com.zaxxer.hikari: info
+    com.zaxxer.hikari.HikariConfig: info
     org:
       hibernate:
-        type: trace
+        type: info
   pattern:
     dateformat: yyyy-MM-dd HH:mm:ss.SSS,${app.default.timezone}
-
 spring:
   profiles:
     active:
-#      - postgres_live
-      - liquibase
+  #      - postgres_live
+  #      - liquibase
   autoconfigure:
     exclude:
       - org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
       - org.springframework.boot.actuate.autoconfigure.security.servlet.ManagementWebSecurityAutoConfiguration
+      - org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration
   datasource:
     url: ${DB_URL:jdbc}
     username: ${DB_USERNAME:sa}
     password: ${DB_PASSWORD:password}
     hikari:
       auto-commit: false
+      minimum-idle: 0
+      maximum-pool-size: 100
+      max-lifetime: 900000
   h2:
     console:
       enabled: @h2.enable@
@@ -40,20 +43,26 @@ spring:
     open-in-view: false
     show-sql: false
     hibernate:
-      ddl-auto: none
+      ddl-auto: create-drop
     properties:
+      javax.persistence.query.timeout: 60000 #ms
       hibernate:
-        generate_statistics: true
+        generate_statistics: false
         format_sql: true
         session.events.log.LOG_QUERIES_SLOWER_THAN_MS: 20
         jdbc:
           batch_size: ${app.datasource.batch_size}
           time_zone: ${app.default.timezone}
+          batch_versioned_data: true
         order:
           inserts: true
           updates: true
         connection.provider_disables_autocommit: true
         id.optimizer.pooled.preferred: pooled-lo
+        query:
+          in_clause_parameter_padding: true
+          fail_on_pagination_over_collection_fetch: true
+          plan_cache_max_size: 4096
   application:
     name: shoppinglist
   jackson: #these properties are overridden in case we configure @EnableWebMvc,in that case we need to implement custom MappingJackson2HttpMessageConverter
@@ -64,9 +73,12 @@ spring:
       fail-on-unknown-properties: true
   mvc:
     throw-exception-if-no-handler-found: true
+    log-request-details: true
   web:
     resources:
       add-mappings: false
+  transaction:
+    default-timeout: 60
 server:
   shutdown: graceful
   port: 8080
@@ -77,7 +89,7 @@ server:
     enabled: true
     mime-types: application/json
     min-response-size: 2KB
-
+  use-forward-headers: true
 management:
   endpoint:
     health:
@@ -103,6 +115,7 @@ app:
     batch_size: 500
 
 springdoc:
+  default-produces-media-type: application/json
   swagger-ui:
     path: /swagger-ui.html
     display-request-duration: true
@@ -114,28 +127,6 @@ springdoc:
   api-docs:
     groups:
       enabled: true
-
----
-spring:
-  config:
-    activate:
-      on-profile:
-        - flyway
-  flyway:
-    enabled: true
-    baseline-on-migrate: true
-  liquibase:
-    enabled: false
----
-spring:
-  config:
-    activate:
-      on-profile:
-        - postgres_live
-  datasource:
-    url: jdbc:postgresql://localhost:5432/amigoscode
-    username: amigoscode
-    password: password
 ---
 spring:
   config:

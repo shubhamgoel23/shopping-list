@@ -1,14 +1,15 @@
 package com.example.shoppinglist.exception;
 
+import com.example.shoppinglist.util.LoggerHelper;
+import com.example.shoppinglist.util.Response;
 import com.example.shoppinglist.util.ResponseBuilder;
 import com.example.shoppinglist.util.ValidationError;
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.hibernate.validator.internal.engine.path.PathImpl;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.lang.Nullable;
 import org.springframework.util.ObjectUtils;
 import org.springframework.validation.FieldError;
@@ -21,10 +22,13 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import org.springframework.web.util.WebUtils;
 
+import javax.servlet.RequestDispatcher;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import static com.example.shoppinglist.util.HelperClass.*;
@@ -32,6 +36,22 @@ import static com.example.shoppinglist.util.HelperClass.*;
 @RestControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
+
+    @ExceptionHandler({ApplicationException.class})
+    protected ResponseEntity<Object> handleApplicationException(final ApplicationException ex, WebRequest request) {
+        HttpHeaders headers = new HttpHeaders();
+        HttpStatus status = HttpStatus.resolve((Integer) request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE, 0));
+
+        Object body = Response.<Void>builder()
+                .path((String) request.getAttribute(RequestDispatcher.ERROR_REQUEST_URI, 0))
+                .status(status)
+                .statusCode(status.value())
+                .reason((String) request.getAttribute(RequestDispatcher.ERROR_MESSAGE, 0))
+                .developerMessage((String) request.getAttribute(RequestDispatcher.ERROR_EXCEPTION, 0))
+                .build();
+
+        return handleExceptionInternal(ex, body, headers, status, request);
+    }
 
     @ExceptionHandler({BusinessException.class})
     protected ResponseEntity<Object> handleBusinessException(final BusinessException ex, WebRequest request) {
@@ -50,19 +70,47 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @Override
     protected ResponseEntity<Object> handleExceptionInternal(Exception ex, @Nullable Object body, HttpHeaders headers,
                                                              HttpStatus status, WebRequest request) {
-        log.error("Request {} {} failed with exception reason: {}", requestMethod.get().orElse("null"),
-                requestUrl.get().orElse("null"), ex.getMessage(), ex);
+
+        if (ObjectUtils.isEmpty(body))
+            log.error("Request {} {} failed with exception reason: {}", requestMethod.get().orElse("null"),
+                    requestUrl.get().orElse("null"), ex.getMessage());
+        else {
+            Response response = (Response) body;
+            log.error("Request {} {} failed with reason: {}", response.getMethod(),
+                    response.getPath(), response.getReason());
+        }
+        log.error(LoggerHelper.printTop10StackTrace(ex));
+
         if (HttpStatus.INTERNAL_SERVER_ERROR.equals(status)) {
             request.setAttribute(WebUtils.ERROR_EXCEPTION_ATTRIBUTE, ex, RequestAttributes.SCOPE_REQUEST);
         }
         Throwable root = ExceptionUtils.getRootCause(ex);
 
-        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setContentType(MediaType.APPLICATION_PROBLEM_JSON);
+
+        String msg = "Oops, Something went wrong!";
+        String reason = root.getClass().getSimpleName();
+        if (root instanceof BusinessException exception) {
+            reason = exception.getCode();
+            msg = exception.getMessage();
+        }
+
         body = ObjectUtils.isEmpty(body)
-                ? ResponseBuilder.build(status, root.getMessage(), root.getClass().getSimpleName())
+                ? ResponseBuilder.build(status, msg, reason)
                 : body;
 
-        return new ResponseEntity<>(body, headers, status);
+        return ResponseEntity
+                .status(status)
+                .contentType(MediaType.APPLICATION_PROBLEM_JSON)
+//                .headers(headers)
+                .cacheControl(CacheControl
+                        .maxAge(1, TimeUnit.MINUTES)
+                        .mustRevalidate()
+                        .cachePrivate()
+                        .noTransform()
+                        .staleIfError(1, TimeUnit.MINUTES)
+                        .staleWhileRevalidate(1, TimeUnit.MINUTES))
+                .body(body);
     }
 
     /**
@@ -141,6 +189,21 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     public List<ValidationError> addValidationErrors(Set<ConstraintViolation<?>> constraintViolations) {
         return collectionAsStream(constraintViolations).map(this::addValidationError).toList();
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+
+        Object body = null;
+        if (ex.getCause() instanceof InvalidFormatException ifx) {
+            if (ifx.getTargetType() != null && ifx.getTargetType().isEnum()) {
+                var errorMsg = String.format("Invalid value: '%s' for the field: '%s'. The value must be one of: %s.",
+                        ifx.getValue(), ifx.getPath().get(ifx.getPath().size() - 1).getFieldName(), Arrays.toString(ifx.getTargetType().getEnumConstants()));
+                body = ResponseBuilder.build(status, errorMsg, ifx.getClass().getSimpleName());
+            }
+        }
+
+        return this.handleExceptionInternal(ex, body, headers, status, request);
     }
 
 }
