@@ -29,7 +29,7 @@ jobs:
       - name: Push Postgres Docker image
         run: docker push docker.io/${{ secrets.DOCKERHUB_USERNAME }}/shoppinglist:postgres-native
       - name: Build H2 Docker Image
-        run: mvn spring-boot:build-image -DskipTests -Dspring.native.verbose=true --file pom.xml
+        run: mvn spring-boot:build-image -DskipTests -P h2 -Dspring.native.verbose=true --file pom.xml
       - name: Push H2 Docker image
         run: docker push docker.io/${{ secrets.DOCKERHUB_USERNAME }}/shoppinglist:h2-native
       
