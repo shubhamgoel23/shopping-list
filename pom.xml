@@ -46,6 +46,8 @@
         <h2.version>2.1.210</h2.version>
         <liquibase.version>4.8.0</liquibase.version>
         <envers.version>5.6.10.Final</envers.version>
+        <flyway.version>8.4.2</flyway.version>
+        <spring-native.version>0.12.0</spring-native.version>
     </properties>
     <dependencies>
         <dependency>
@@ -149,6 +151,12 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-sleuth</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>org.springframework.experimental</groupId>
+            <artifactId>spring-native</artifactId>
+            <version>${spring-native.version}</version>
+        </dependency>
         <dependency>
             <groupId>io.micrometer</groupId>
             <artifactId>micrometer-registry-prometheus</artifactId>
@@ -211,11 +219,12 @@
                 <configuration>
                     <image>
                         <builder>paketobuildpacks/builder:tiny</builder>
-                        <name>docker.io/shubhamgoel23/${project.artifactId}:${version.number}</name>
+                        <name>docker.io/shubhamgoel23/${project.artifactId}:${project.activeProfiles[0].id}-native</name>
                         <env>
                             <BPE_APPEND_JAVA_TOOL_OPTIONS>-Djava.security.egd=file:/dev/./urandom</BPE_APPEND_JAVA_TOOL_OPTIONS>
                             <BPE_DELIM_JAVA_TOOL_OPTIONS xml:space="preserve"> </BPE_DELIM_JAVA_TOOL_OPTIONS>
                             <BP_BINARY_COMPRESSION_METHOD>upx</BP_BINARY_COMPRESSION_METHOD>
+                            <BP_NATIVE_IMAGE>true</BP_NATIVE_IMAGE>
                         </env>
                     </image>
                     <excludes>
@@ -224,7 +233,47 @@
                             <artifactId>lombok</artifactId>
                         </exclude>
                     </excludes>
+                         <classifier>${repackage.classifier}</classifier>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.springframework.experimental</groupId>
+                <artifactId>spring-aot-maven-plugin</artifactId>
+                <version>${spring-native.version}</version>
+                <executions>
+                    <execution>
+                        <id>test-generate</id>
+                        <goals>
+                            <goal>test-generate</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>generate</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.hibernate.orm.tooling</groupId>
+                <artifactId>hibernate-enhance-maven-plugin</artifactId>
+                <version>${hibernate.version}</version>
+                <executions>
+                    <execution>
+                        <id>enhance</id>
+                        <goals>
+                            <goal>enhance</goal>
+                        </goals>
+                        <configuration>
+                            <failOnError>true</failOnError>
+                            <enableLazyInitialization>true</enableLazyInitialization>
+                            <enableDirtyTracking>true</enableDirtyTracking>
+                            <enableAssociationManagement>true</enableAssociationManagement>
+                            <enableExtendedEnhancement>false</enableExtendedEnhancement>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>pl.project13.maven</groupId>
@@ -326,16 +375,77 @@
         </plugins>
     </build>
 
+    <repositories>
+        <repository>
+            <id>spring-releases</id>
+            <name>Spring Releases</name>
+            <url>https://repo.spring.io/release</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>spring-releases</id>
+            <name>Spring Releases</name>
+            <url>https://repo.spring.io/release</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
+
     <profiles>
+        <profile>
+            <id>native</id>
+            <properties>
+                <repackage.classifier>exec</repackage.classifier>
+                <native-buildtools.version>0.9.9</native-buildtools.version>
+            </properties>
+            <dependencies>
+                <dependency>
+                    <groupId>org.junit.platform</groupId>
+                    <artifactId>junit-platform-launcher</artifactId>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.graalvm.buildtools</groupId>
+                        <artifactId>native-maven-plugin</artifactId>
+                        <version>${native-buildtools.version}</version>
+                        <extensions>true</extensions>
+                        <executions>
+                            <execution>
+                                <id>test-native</id>
+                                <phase>test</phase>
+                                <goals>
+                                    <goal>test</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>build-native</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>build</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
         <profile>
             <id>h2</id>
             <properties>
                 <h2.enable>true</h2.enable>
                 <profile.db.test>h2</profile.db.test>
             </properties>
-            <activation>
+            <!--<activation>
                 <activeByDefault>true</activeByDefault>
-            </activation>
+            </activation>-->
             <dependencies>
                 <dependency>
                     <groupId>com.h2database</groupId>
@@ -349,9 +459,9 @@
             <properties>
                 <profile.db.test>postgres</profile.db.test>
             </properties>
-            <!--<activation>
+            <activation>
                 <activeByDefault>true</activeByDefault>
-            </activation>-->
+            </activation>
             <dependencies>
                 <dependency>
                     <groupId>org.postgresql</groupId>

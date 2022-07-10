@@ -22,7 +22,7 @@ spring:
       - org.springframework.boot.actuate.autoconfigure.security.servlet.ManagementWebSecurityAutoConfiguration
       - org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration
   datasource:
-    url: ${DB_URL:jdbc:h2:mem:testdb;DB_CLOSE_ON_EXIT=FALSE}
+    url: ${DB_URL:jdbc}
     username: ${DB_USERNAME:sa}
     password: ${DB_PASSWORD:password}
     hikari:
