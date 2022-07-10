@@ -29,7 +29,7 @@
         <owasp-html-sanitizer.version>20220608.1</owasp-html-sanitizer.version>
         <jjwt.version>0.11.5</jjwt.version>
         <jacoco.version>0.8.8</jacoco.version>
-        <hibernate-jpamodelgen.version>5.6.9.Final</hibernate-jpamodelgen.version>
+        <hibernate-jpamodelgen.version>5.6.10.Final</hibernate-jpamodelgen.version>
         <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
         <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
         <sonar.jacoco.reportPath>${project.basedir}/../target/jacoco.exec</sonar.jacoco.reportPath>
@@ -44,9 +44,9 @@
         <dependency-check-maven.version>7.1.1</dependency-check-maven.version>
         <!--vulnerable dependency  -->
         <h2.version>2.1.210</h2.version>
-        <envers.version>5.6.9.Final</envers.version>
+        <liquibase.version>4.8.0</liquibase.version>
+        <envers.version>5.6.10.Final</envers.version>
         <flyway.version>8.4.2</flyway.version>
-        <liquibase.version>4.7.1</liquibase.version>
         <spring-native.version>0.12.0</spring-native.version>
     </properties>
     <dependencies>
