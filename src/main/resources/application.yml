@@ -43,7 +43,7 @@ spring:
     open-in-view: false
     show-sql: false
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: ${DDL_AUTO:create-drop}
     properties:
       javax.persistence.query.timeout: 60000 #ms
       hibernate:

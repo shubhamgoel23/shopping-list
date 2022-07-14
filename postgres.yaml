@@ -1,0 +1,12 @@
+services:
+  database:
+    image: postgres:latest
+    hostname: postgres
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_PASSWORD: password # The PostgreSQL password (useful to connect to the database)
+      POSTGRES_DB: shoppinglist
+      PGDATA: /data/postgres
+    volumes:
+      - ./postgres/:/data/postgres

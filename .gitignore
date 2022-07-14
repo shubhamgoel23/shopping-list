@@ -37,3 +37,4 @@ build/
 /mvnw
 /mvnw.cmd
 /.jpb/persistence-units.xml
+/db-data/

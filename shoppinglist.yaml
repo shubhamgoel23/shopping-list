@@ -1,12 +1,33 @@
 services:
   shoppinglist:
-    image: shubhamgoel23/shoppinglist:h2
-    hostname: shoppinglist
+    image: shubhamgoel23/shoppinglist:postgres
     deploy:
       replicas: 1
-    expose:
-      - 8080
+    environment:
+      DB_URL: jdbc:postgresql://database/shoppinglist
+      DB_USERNAME: postgres
+      DB_PASSWORD: password
+      DDL_AUTO: update
     restart: unless-stopped
+  database:
+    image: postgres:latest
+    environment:
+      POSTGRES_PASSWORD: password # The PostgreSQL password (useful to connect to the database)
+      POSTGRES_DB: shoppinglist
+      PGDATA: /data
+    volumes:
+      - ./db-data/:/data
+    restart: unless-stopped
+  adminer:
+    image: adminer
+    restart: unless-stopped
+    ports:
+      - 8081:8080
+#  cloudbeaver:
+#    image: dbeaver/cloudbeaver
+#    restart: unless-stopped
+#    ports:
+#      - 8081:8978
   nginx:
     image: nginx:latest
     volumes:
@@ -15,3 +36,4 @@ services:
       - shoppinglist
     ports:
       - 8080:8080
+    restart: unless-stopped
